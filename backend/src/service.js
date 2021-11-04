@@ -97,11 +97,7 @@ export const getEmailFromAuthorization = (authorization) => {
 
 export const login = (email, password) =>
   resourceLock((resolve, reject) => {
-    if (!email) {
-      reject(new InputError('Must provide an email for user login'));
-    } else if (!password) {
-      reject(new InputError('Must provide a password for user login'));
-    } else if (email && email in users) {
+    if (email in users) {
       if (users[email].password === password) {
         users[email].sessionActive = true;
         resolve(jwt.sign({ email }, JWT_SECRET, { algorithm: 'HS256' }));
@@ -118,13 +114,7 @@ export const logout = (email) =>
 
 export const register = (email, password, name) =>
   resourceLock((resolve, reject) => {
-    if (!email) {
-      reject(new InputError('Must provide an email for user registration'));
-    } else if (!password) {
-      reject(new InputError('Must provide a password for user registration'));
-    } else if (!name) {
-      reject(new InputError('Must provide a name for user registration'));
-    } else if (email && email in users) {
+    if (email in users) {
       reject(new InputError('Email address already registered'));
     }
     users[email] = {
