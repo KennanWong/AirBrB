@@ -13,7 +13,7 @@ import {
   WrappedContainer
 } from './Components/Styles';
 import PasswordInput from './Components/PasswordInput';
-import { apiFetch, setFieldInState } from './Helpers';
+import { apiFetch, setFieldInState, setToken } from './Helpers';
 
 export default function Register () {
   const [name, setName] = React.useState('');
@@ -98,16 +98,14 @@ export default function Register () {
     };
     try {
       const ret = await apiFetch('POST', '/user/auth/register', null, body);
-      console.log(ret);
+      console.log(ret.token);
       setToken(ret.token);
     } catch (e) {
       setErrorStatus({
         email: true,
-        password: true,
       })
       setErrorMsg({
         email: e,
-        password: e,
       })
       console.log(errorMsg);
     }
