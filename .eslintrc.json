@@ -18,6 +18,7 @@
             "exports": "always",
             "functions": "never"
         }],
-        "semi": ["error", "always"]
+        "semi": ["error", "always"],
+        "indent": ["error", 4]
     }
 }
