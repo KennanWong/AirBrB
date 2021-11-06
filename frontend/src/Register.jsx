@@ -15,7 +15,7 @@ import {
 import PasswordInput from './Components/PasswordInput';
 import { apiFetch, setFieldInState, setToken } from './Helpers';
 
-export default function Register () {
+export default function Register ({ setActiveUser }) {
   const [name, setName] = React.useState('');
   const [email, setEmail] = React.useState('');
 
@@ -100,6 +100,7 @@ export default function Register () {
       const ret = await apiFetch('POST', '/user/auth/register', null, body);
       console.log(ret.token);
       setToken(ret.token);
+      setActiveUser(true);
     } catch (e) {
       setErrorStatus({
         email: true,

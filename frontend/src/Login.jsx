@@ -18,7 +18,7 @@ import { apiFetch, setToken } from './Helpers';
 
 // https://www.canva.com/colors/color-palettes/summer-splash/
 
-const submitLogin = async (email, password, setErrorMsg, setErrorStatus) => {
+const submitLogin = async (email, password, setErrorMsg, setErrorStatus, setActiveUser) => {
   const body = {
     email: email,
     password: password,
@@ -27,6 +27,7 @@ const submitLogin = async (email, password, setErrorMsg, setErrorStatus) => {
     const ret = await apiFetch('POST', '/user/auth/login', null, body);
     console.log(ret);
     setToken(ret.token);
+    setActiveUser(true);
   } catch (e) {
     console.log(e);
     setErrorStatus({
@@ -42,7 +43,7 @@ const submitLogin = async (email, password, setErrorMsg, setErrorStatus) => {
 
  
 
-export default function Login () {
+export default function Login ({ setActiveUser }) {
   const [email, setEmail] = React.useState('');
   const [passwordField, setPasswordField] = React.useState({
     password: '',
@@ -86,7 +87,7 @@ export default function Login () {
               <PasswordInput errorStatus={errorStatus.password} errorMsg={errorMsg.password} resetError={resetError} label='Password' passwordField={passwordField} setState={setPasswordField}/>
             </div>
             <br/>
-            <Button variant="contained" onClick={(e) => submitLogin(email, passwordField.password, setErrorMsg, setErrorStatus) }>Login</Button>
+            <Button variant="contained" onClick={(e) => submitLogin(email, passwordField.password, setErrorMsg, setErrorStatus, setActiveUser) }>Login</Button>
           </StyledForm>
           <Divider variant="middle"/>
           <StyledForm>

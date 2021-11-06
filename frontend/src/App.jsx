@@ -1,9 +1,11 @@
+/* eslint-disable react/prop-types */
 import React from 'react';
 import './App.css';
 import {
   Route,
   Routes,
   BrowserRouter,
+  useNavigate,
 } from 'react-router-dom';
 
 import Button from '@mui/material/Button';
@@ -22,10 +24,16 @@ import { logout } from './Logout';
 const token = getToken();
 
 export default function App () {
+  const [activeUser, setActiveUser] = React.useState(false);
+
+  if (activeUser) {
+    const navigate = useNavigate();
+    navigate('/');
+  }
   return (
     <Container>
-      <Header/>
-      <Body/>
+      <Header setActiveUser={setActiveUser}/>
+      <Body setActiveUser={setActiveUser}/>
     </Container>
   );
 }
@@ -36,7 +44,7 @@ const HeaderStyle = styled('div')({
   alignItems: 'center',
 });
 
-function Header () {
+function Header ({ setActiveUser }) {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
@@ -53,6 +61,7 @@ function Header () {
   const logoutFn = () => {
     handleClose();
     logout();
+    setActiveUser(false);
   }
   return (
     <HeaderStyle>
@@ -104,13 +113,13 @@ function Header () {
   );
 }
 
-function Body () {
+function Body ({ setActiveUser }) {
   return (
     <div>
       <BrowserRouter>
         <Routes>
-          <Route path="/login" element={<Login/>}/>
-          <Route path="/register" element={<Register/>}/>
+          <Route path="/login" element={<Login setActiveUser={setActiveUser}/>}/>
+          <Route path="/register" element={<Register setActiveUser={setActiveUser}/>}/>
           <Route exact path="/" element={<Landing/>}/>
         </Routes>
       </BrowserRouter>
