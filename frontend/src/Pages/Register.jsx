@@ -3,19 +3,21 @@ import React from 'react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
-import Link from '@mui/material/Link';
 import { Container } from '@mui/material';
+import {
+  Link
+} from 'react-router-dom'
 
 // Self defined Components
-import TextInput from './Components/TextInput';
+import TextInput from '../Components/TextInput';
 import {
   StyledForm,
   WrappedContainer
-} from './Components/Styles';
-import PasswordInput from './Components/PasswordInput';
-import { apiFetch, setFieldInState, setToken } from './Helpers';
+} from '../Components/Styles';
+import PasswordInput from '../Components/PasswordInput';
+import { apiFetch, setFieldInState, setToken } from '../Helpers';
 
-export default function Register () {
+export default function Register ({ setActiveUser }) {
   const [name, setName] = React.useState('');
   const [email, setEmail] = React.useState('');
 
@@ -58,7 +60,7 @@ export default function Register () {
     })
   }
 
-  const submitRegister = async (name, email, password, confirmPassword) => {
+  const submitRegister = async (name, email, password, confirmPassword, setActiveUser) => {
     // If passwords do not match
     if (password !== confirmPassword) {
       console.log('passwords not the same');
@@ -100,6 +102,7 @@ export default function Register () {
       const ret = await apiFetch('POST', '/user/auth/register', null, body);
       console.log(ret.token);
       setToken(ret.token);
+      setEmail(email);
     } catch (e) {
       setErrorStatus({
         email: true,
@@ -150,11 +153,11 @@ export default function Register () {
                 setState={setConfirmPassword}/>
             </div>
             <br/>
-            <Button variant="contained" onClick={(e) => submitRegister(name, email, passwordField.password, confirmPassword.password) }>Register</Button>
+            <Button variant="contained" onClick={(e) => submitRegister(name, email, passwordField.password, confirmPassword.password, setActiveUser) }>Register</Button>
           </StyledForm>
           <Divider variant="middle"/>
           <StyledForm>
-            <Link href='/login' underline="hover">
+            <Link to='/login'>
               Already have an Accout? Login here.
             </Link>
           </StyledForm>

@@ -59,6 +59,7 @@ export const setFieldInState = (field, value, state, setState) => {
 
 export const setToken = (token) => {
   if (token == null) {
+    localStorage.removeItem('active-email');
     localStorage.removeItem('token');
   } else {
     localStorage.setItem('token', token);
@@ -67,4 +68,12 @@ export const setToken = (token) => {
 
 export const getToken = () => {
   return localStorage.getItem('token');
+}
+
+export const setEmail = (email) => {
+  localStorage.setItem('active-email', email)
+}
+
+export const getEmail = (email) => {
+  return localStorage.getItem('active-email');
 }

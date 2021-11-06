@@ -1,31 +1,41 @@
+/* eslint-disable react/prop-types */
 import React from 'react';
 import './App.css';
 import {
   Route,
   Routes,
   BrowserRouter,
+  Link,
+  Navigate,
 } from 'react-router-dom';
 
 import Button from '@mui/material/Button';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
-import Link from '@mui/material/Link';
 import { styled } from '@mui/material/styles';
 
-import Login from './Login';
-import Register from './Register';
-import Landing from './Landing';
-import { getToken } from './Helpers';
+import Login from './Pages/Login';
+import Register from './Pages/Register';
+import Landing from './Pages/Landing';
 import { Container } from '@mui/material';
 import { logout } from './Logout';
+import CreateListing from './Pages/CreateListing';
+import MyListings from './Pages/MyListings';
+import { getToken } from './Helpers';
 
-const token = getToken();
+const isUserActive = () => {
+  if (getToken != null) {
+    return true;
+  } else {
+    return false;
+  }
+}
 
 export default function App () {
+  const [activeUser, setActiveUser] = React.useState(isUserActive());
   return (
     <Container>
-      <Header/>
-      <Body/>
+      <Body activeUser={activeUser} setActiveUser={setActiveUser}/>
     </Container>
   );
 }
@@ -36,7 +46,7 @@ const HeaderStyle = styled('div')({
   alignItems: 'center',
 });
 
-function Header () {
+function Header ({ activeUser, setActiveUser }) {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
@@ -45,14 +55,10 @@ function Header () {
   const handleClose = () => {
     setAnchorEl(null);
   };
-  let activeSession = false;
-  if (token != null) {
-    activeSession = true;
-  }
 
   const logoutFn = () => {
     handleClose();
-    logout();
+    logout(setActiveUser);
   }
   return (
     <HeaderStyle>
@@ -80,23 +86,25 @@ function Header () {
             'aria-labelledby': 'basic-button',
           }}
         >
-          {activeSession
+          {activeUser
             ? <div>
                 <MenuItem onClick={handleClose}>Profile</MenuItem>
-                <MenuItem onClick={handleClose}>My Listings</MenuItem>
+                <MenuItem onClick={handleClose}>
+                  <Link to='/mylistings'>My Listings</Link>
+                </MenuItem>
                 <MenuItem onClick={logoutFn}>Logout</MenuItem>
               </div>
             : <div>
                 <MenuItem onClick={handleClose}>
-                  <Link href='/login' underline="none">Login</Link>
+                  <Link to='/login'>Login</Link>
                 </MenuItem>
                 <MenuItem onClick={handleClose}>
-                  <Link href='/register' underline="none">Register</Link>
+                  <Link to='/register'>Register</Link>
                 </MenuItem>
               </div>
           }
           <MenuItem onClick={handleClose}>
-            <Link href='/' underline="none">Home</Link>
+            <Link to='/'>Home</Link>
           </MenuItem>
         </Menu>
       </div>
@@ -104,14 +112,20 @@ function Header () {
   );
 }
 
-function Body () {
+function Body ({ activeUser, setActiveUser }) {
   return (
     <div>
       <BrowserRouter>
+        <Header activeUser={activeUser} setActiveUser={setActiveUser}/>
         <Routes>
-          <Route path="/login" element={<Login/>}/>
-          <Route path="/register" element={<Register/>}/>
-          <Route exact path="/" element={<Landing/>}/>
+          <Route path="/login" element={<Login setActiveUser={setActiveUser}/>}/>
+          <Route path="/register" element={<Register setActiveUser={setActiveUser}/>}/>
+          <Route exact path="/" element={<Landing/>}>
+            <Navigate to="/listings"/>
+          </Route>
+          <Route path="/listings" element={<Landing/>}/>
+          <Route path="/myListings" element={<MyListings/>}/>
+          <Route path="/createListing" element={<CreateListing/>}/>
         </Routes>
       </BrowserRouter>
     </div>
