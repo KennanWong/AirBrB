@@ -5,35 +5,40 @@ import {
   Route,
   Routes,
   BrowserRouter,
+  Link,
+  Navigate,
   useNavigate,
 } from 'react-router-dom';
 
 import Button from '@mui/material/Button';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
-import Link from '@mui/material/Link';
 import { styled } from '@mui/material/styles';
 
-import Login from './Login';
-import Register from './Register';
-import Landing from './Landing';
-import { getToken } from './Helpers';
+import Login from './Pages/Login';
+import Register from './Pages/Register';
 import { Container } from '@mui/material';
-import { logout } from './Logout';
+import { logout } from './Pages/Logout';
+import CreateListing from './Pages/CreateListing';
+import MyListings from './Pages/MyListings';
+import { getToken } from './Helpers';
+import Listings from './Pages/Listings';
+import ShowListing from './Pages/ShowListing';
 
-const token = getToken();
+const isUserActive = () => {
+  console.log('token: ', getToken())
+  if (getToken() != null) {
+    return true;
+  } else {
+    return false;
+  }
+}
 
 export default function App () {
-  const [activeUser, setActiveUser] = React.useState(false);
-
-  if (activeUser) {
-    const navigate = useNavigate();
-    navigate('/');
-  }
+  const [activeUser, setActiveUser] = React.useState(isUserActive());
   return (
     <Container>
-      <Header setActiveUser={setActiveUser}/>
-      <Body setActiveUser={setActiveUser}/>
+      <Body activeUser={activeUser} setActiveUser={setActiveUser}/>
     </Container>
   );
 }
@@ -44,7 +49,7 @@ const HeaderStyle = styled('div')({
   alignItems: 'center',
 });
 
-function Header ({ setActiveUser }) {
+function Header ({ activeUser, setActiveUser }) {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
@@ -53,16 +58,14 @@ function Header ({ setActiveUser }) {
   const handleClose = () => {
     setAnchorEl(null);
   };
-  let activeSession = false;
-  if (token != null) {
-    activeSession = true;
+
+  const logoutFn = (navigate) => {
+    handleClose();
+    logout(setActiveUser);
+    navigate('/');
   }
 
-  const logoutFn = () => {
-    handleClose();
-    logout();
-    setActiveUser(false);
-  }
+  const navigate = useNavigate();
   return (
     <HeaderStyle>
       <div>
@@ -89,23 +92,25 @@ function Header ({ setActiveUser }) {
             'aria-labelledby': 'basic-button',
           }}
         >
-          {activeSession
+          {activeUser
             ? <div>
                 <MenuItem onClick={handleClose}>Profile</MenuItem>
-                <MenuItem onClick={handleClose}>My Listings</MenuItem>
-                <MenuItem onClick={logoutFn}>Logout</MenuItem>
+                <MenuItem onClick={handleClose}>
+                  <Link to='/mylistings'>My Listings</Link>
+                </MenuItem>
+                <MenuItem onClick={(e) => logoutFn(navigate)}>Logout</MenuItem>
               </div>
             : <div>
                 <MenuItem onClick={handleClose}>
-                  <Link href='/login' underline="none">Login</Link>
+                  <Link to='/login'>Login</Link>
                 </MenuItem>
                 <MenuItem onClick={handleClose}>
-                  <Link href='/register' underline="none">Register</Link>
+                  <Link to='/register'>Register</Link>
                 </MenuItem>
               </div>
           }
           <MenuItem onClick={handleClose}>
-            <Link href='/' underline="none">Home</Link>
+            <Link to='/'>Home</Link>
           </MenuItem>
         </Menu>
       </div>
@@ -113,14 +118,20 @@ function Header ({ setActiveUser }) {
   );
 }
 
-function Body ({ setActiveUser }) {
+function Body ({ activeUser, setActiveUser }) {
   return (
     <div>
       <BrowserRouter>
+        <Header activeUser={activeUser} setActiveUser={setActiveUser}/>
         <Routes>
           <Route path="/login" element={<Login setActiveUser={setActiveUser}/>}/>
           <Route path="/register" element={<Register setActiveUser={setActiveUser}/>}/>
-          <Route exact path="/" element={<Landing/>}/>
+          <Route exact path="/" element={<Navigate replace to="/listings"/>}>
+          </Route>
+          <Route path="/listings" element={<Listings/>}/>
+          <Route path="/myListings" element={<MyListings/>}/>
+          <Route path="/createListing" element={<CreateListing/>}/>
+          <Route path="/listing/:id" element={<ShowListing/>}></Route>
         </Routes>
       </BrowserRouter>
     </div>

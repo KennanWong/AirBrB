@@ -1,3 +1,5 @@
+import React from 'react';
+import { Route } from 'react-router';
 
 // Function to make api calls
 export const apiFetch = (method, route, TOKEN, body) => {
@@ -59,6 +61,7 @@ export const setFieldInState = (field, value, state, setState) => {
 
 export const setToken = (token) => {
   if (token == null) {
+    localStorage.removeItem('active-email');
     localStorage.removeItem('token');
   } else {
     localStorage.setItem('token', token);
@@ -67,4 +70,18 @@ export const setToken = (token) => {
 
 export const getToken = () => {
   return localStorage.getItem('token');
+}
+
+export const setEmail = (email) => {
+  localStorage.setItem('active-email', email)
+}
+
+export const getEmail = (email) => {
+  return localStorage.getItem('active-email');
+}
+
+export function navigateTo (path, element) {
+  return (
+    <Route path={path} element={element}/>
+  )
 }

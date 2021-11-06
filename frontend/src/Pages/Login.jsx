@@ -3,22 +3,24 @@ import React from 'react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
-import Link from '@mui/material/Link';
 import { Container } from '@mui/material';
-import { useNavigate } from 'react-router';
+import {
+  Link,
+  useNavigate,
+} from 'react-router-dom';
 
 // Self defined Components
-import TextInput from './Components/TextInput';
+import TextInput from '../Components/TextInput';
 import {
   StyledForm,
   WrappedContainer
-} from './Components/Styles';
-import PasswordInput from './Components/PasswordInput';
-import { apiFetch, setToken } from './Helpers';
+} from '../Components/Styles';
+import PasswordInput from '../Components/PasswordInput';
+import { apiFetch, setEmail, setToken } from '../Helpers';
 
 // https://www.canva.com/colors/color-palettes/summer-splash/
 
-const submitLogin = async (email, password, setErrorMsg, setErrorStatus, setActiveUser) => {
+const submitLogin = async (email, password, setErrorMsg, setErrorStatus, setActiveUser, navigate) => {
   const body = {
     email: email,
     password: password,
@@ -27,7 +29,9 @@ const submitLogin = async (email, password, setErrorMsg, setErrorStatus, setActi
     const ret = await apiFetch('POST', '/user/auth/login', null, body);
     console.log(ret);
     setToken(ret.token);
+    setEmail(email);
     setActiveUser(true);
+    navigate('/');
   } catch (e) {
     console.log(e);
     setErrorStatus({
@@ -39,9 +43,7 @@ const submitLogin = async (email, password, setErrorMsg, setErrorStatus, setActi
       password: e,
     })
   }
-};
-
- 
+}; 
 
 export default function Login ({ setActiveUser }) {
   const [email, setEmail] = React.useState('');
@@ -71,6 +73,8 @@ export default function Login ({ setActiveUser }) {
     })
   }
 
+  const navigate = useNavigate();
+
   console.log(email);
   console.log(passwordField.password);
 
@@ -87,11 +91,11 @@ export default function Login ({ setActiveUser }) {
               <PasswordInput errorStatus={errorStatus.password} errorMsg={errorMsg.password} resetError={resetError} label='Password' passwordField={passwordField} setState={setPasswordField}/>
             </div>
             <br/>
-            <Button variant="contained" onClick={(e) => submitLogin(email, passwordField.password, setErrorMsg, setErrorStatus, setActiveUser) }>Login</Button>
+            <Button variant="contained" onClick={(e) => submitLogin(email, passwordField.password, setErrorMsg, setErrorStatus, setActiveUser, navigate) }>Login</Button>
           </StyledForm>
           <Divider variant="middle"/>
           <StyledForm>
-            <Link href='/register' underline="hover">
+            <Link to='/register'>
               Don't have an Accout? Register here.
             </Link>
           </StyledForm>
