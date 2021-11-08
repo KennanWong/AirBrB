@@ -8,36 +8,49 @@ import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
 import { CardActionArea } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+import ListingDetailsBar from './ListingDetailsBar';
+
+import {
+  getListingDetails
+} from '../Helpers.jsx'
 
 export default function Listing ({ details }) {
-  console.log('Details: ', details);
+  const [listingDetails, setListingDetails] = React.useState({
+    title: '',
+    address: '',
+    price: 0,
+    thumbnail: '',
+    type: '',
+    bathrooms: 0,
+    bedrooms: [],
+  })
+  React.useEffect(() => {
+    getListingDetails(details.id, listingDetails, setListingDetails);
+  }, [])
   const navigate = useNavigate();
   return (
     <div>
       <Card sx={{ maxWidth: 345 }}>
         <CardActionArea onClick={() => navigate(`/listing/${details.id}`)}>
-          { (details.thumbnail !== '')
+          { (listingDetails.thumbnail !== '')
             ? <CardMedia
                 component="img"
                 height="140"
-                src={details.thumbnail}
-                alt={details.title}
+                src={listingDetails.thumbnail}
+                alt={listingDetails.title}
               />
             : <CardMedia
                 component="img"
                 height="140"
                 image={".../Images/home-icon.png"}
-                alt={details.title}
+                alt={listingDetails.title}
               />
           }
           <CardContent>
             <Typography gutterBottom variant="h5" component="div">
-              {details.title}
+              {listingDetails.title}  
             </Typography>
-            <Typography variant="body2" color="text.secondary">
-              Lizards are a widespread group of squamate reptiles, with over 6,000
-              species, ranging across all continents except Antarctica
-            </Typography>
+            <ListingDetailsBar bathroomNum={Number(listingDetails.bathrooms)} bedroomNum={Number(listingDetails.bathrooms)}/> 
           </CardContent>
         </CardActionArea>
       </Card>

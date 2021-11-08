@@ -104,3 +104,25 @@ export function fileToDataUrl (file) {
   reader.readAsDataURL(file);
   return dataUrlPromise;
 }
+
+export const getListingDetails = async (id, listingDetails, setListingDetails) => {
+  try {
+    const ret = await apiFetch('GET', `/listings/${id}`, null, {});
+    const listing = ret.listing;
+    console.log(listing);
+
+    setListingDetails({
+      ...listingDetails,
+      title: listing.title,
+      address: listing.address,
+      price: Number(listing.price),
+      thumbnail: listing.thumbnail,
+      type: listing.metadata.type,
+      bathrooms: Number(listing.metadata.bathrooms),
+      bedrooms: [],
+    })
+    console.log(listingDetails);
+  } catch (e) {
+    alert(e);
+  }
+}

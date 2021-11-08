@@ -11,29 +11,10 @@ import ListItem from '@mui/material/ListItem';
 
 import { StyledThumbnail, ThumbnailImage } from '../Components/Styles';
 import { useParams } from 'react-router';
-import { apiFetch } from '../Helpers';
-
-const getListingDetails = async (id, listingDetails, setListingDetails) => {
-  try {
-    const ret = await apiFetch('GET', `/listings/${id}`, null, {});
-    const listing = ret.listing;
-    console.log(listing);
-
-    setListingDetails({
-      ...listingDetails,
-      title: listing.title,
-      address: listing.address,
-      price: listing.price,
-      thumbnail: listing.thumbnail,
-      type: listing.metadata.type,
-      bathrooms: listing.metadata.bathrooms,
-      bedrooms: [],
-    })
-    console.log(listingDetails);
-  } catch (e) {
-    alert(e);
-  }
-}
+import {
+  getListingDetails,
+} from '../Helpers';
+import ListingDetailsBar from '../Components/ListingDetailsBar';
 
 export default function ShowListing () {
   const [listingDetails, setListingDetails] = React.useState({
@@ -69,7 +50,6 @@ export default function ShowListing () {
               <Grid item xs={7}>
                 <h1>{listingDetails.title}</h1>
                 <br/>
-                <br/>
                 <h2>{listingDetails.address}</h2>
               </Grid>
             </Grid>
@@ -82,10 +62,10 @@ export default function ShowListing () {
               <Grid item xs={8}>
                 <List sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
                   <ListItem>
-                    <h4>Entire {listingDetails.type}.</h4>
+                    <ListingDetailsBar bedroomNum={listingDetails.bathrooms} bathroomNum={listingDetails.bathrooms}/>
                   </ListItem>
                   <ListItem>
-                    <h4>{listingDetails.bathrooms} Bathrooms available</h4>
+                    <h2>Entire {listingDetails.type}.</h2>
                   </ListItem>
                 </List>
               </Grid>

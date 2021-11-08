@@ -18,6 +18,7 @@ import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 
 import { useNavigate } from 'react-router-dom';
+import PropTypes from 'prop-types';
 
 import React from 'react';
 import { StyledThumbnail, ThumbnailImage } from '../Components/Styles';
@@ -51,6 +52,23 @@ const sendListingDetails = async (details, navigate) => {
   }
 }
 
+NumberOptions.propTypes = {
+  num: PropTypes.number,
+}
+export function NumberOptions ({ num }) {
+  const numList = [];
+  for (let i = 0; i <= num; i++) {
+    numList.push(i);
+  }
+  return (
+    <div>
+      {numList.map((value, key) => {
+        return <MenuItem value={'1'} key={key}> {value}</MenuItem>
+      })}
+    </div>
+  )
+}
+
 export default function CreateListing () {
   const defaultState = {
     title: '',
@@ -81,12 +99,21 @@ export default function CreateListing () {
 
   const handleChange = (prop) => (event) => {
     if (event.target.value !== '') {
-      console.log('updated value')
       setChangedState({ ...changedState, [prop]: true });
     } else {
       setChangedState({ ...changedState, [prop]: false });
     }
-    setDetails({ ...details, [prop]: event.target.value });
+    if (prop === 'bathrooms' || prop === 'bedrooms') {
+      console.log('changing bathrooms');
+      if (event.target.value < 0) {
+        console.log('value is negative');
+        setDetails({ ...details, [prop]: 0 });
+      } else {
+        setDetails({ ...details, [prop]: event.target.value });
+      }
+    } else {
+      setDetails({ ...details, [prop]: event.target.value });
+    }
   };
 
   const navigate = useNavigate();
@@ -158,7 +185,18 @@ export default function CreateListing () {
                   </FormControl>
                   </ListItem>
                   <ListItem>
-                    <TextField label="Number of bathrooms" type="number" onChange={handleChange('bathrooms')} variant="standard" />
+                    <TextField value={details.bathrooms} label="Number of bathrooms" type="number" onChange={handleChange('bathrooms')} variant="standard" />
+                    {/* <FormControl variant="standard" sx={{ minWidth: 120 }}>
+                      <InputLabel>Number of Bathrooms</InputLabel>
+                      <Select
+                        value={details.bathrooms}
+                        onChange={handleChange('bathrooms')}
+                        label="Number of Bathrooms"
+                      >
+                        <NumberOptions num={10}/>
+                        <MenuItem value={'House'}>House</MenuItem>
+                      </Select>
+                    </FormControl> */}
                   </ListItem>
                 </List>
               </Grid>
