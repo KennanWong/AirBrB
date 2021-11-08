@@ -18,20 +18,25 @@ import Listing from '../Components/Listing';
 
 const token = getToken();
 
-const getMyListings = async (listingsList, setListingsList) => {
+const getMyListings = async (listingsList, setListingsList) => { 
+  console.log('Getting listings')
   const ret = await apiFetch('GET', '/listings', null, {});
   const curListings = ret.listings
-  console.log(curListings);
   for (const item in curListings) {
     const listing = curListings[item];
-    console.log(listing);
-    console.log(listing.owner);
     if (listing.owner == getEmail()) {
-      setListingsList([...listingsList, listing]);
+      listingsList.push(listing);
     }
-    
   }
+  setListingsList([...listingsList]);
 }
+
+const ListingsContainer = styled.div`
+  display: flex;
+  align-content: flex-start;
+  justify-content: flex-start;
+  gap: 20px;
+`;
 
 export default function MyListings () {
   const [listingsList, setListingsList] = React.useState([]);
@@ -39,16 +44,18 @@ export default function MyListings () {
   React.useEffect(() => {
     getMyListings(listingsList, setListingsList);
   }, []);
-
+  console.log(listingsList);
   return (
     <Container>
       <h1>My Listings</h1>
       <Divider/>
       <br/>
       <Box sx={{ flexGrow: 1 }}>
-        {listingsList.map((listing, key) => (
-          <Listing details={listing} key={key}></Listing>
-        ))}
+        <ListingsContainer>
+          {listingsList.map((listing, key) => {
+            return <Listing details={listing} key={key}/>
+          })}
+        </ListingsContainer>
       </Box>
       <br/>
       <Divider></Divider>

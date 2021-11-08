@@ -9,7 +9,7 @@ import Grid from '@mui/material/Grid';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 
-import { ThumbnailImage } from '../Components/Styles';
+import { StyledThumbnail, ThumbnailImage } from '../Components/Styles';
 import { useParams } from 'react-router';
 import { apiFetch } from '../Helpers';
 
@@ -24,7 +24,7 @@ const getListingDetails = async (id, listingDetails, setListingDetails) => {
       title: listing.title,
       address: listing.address,
       price: listing.price,
-      thumbnail: '',
+      thumbnail: listing.thumbnail,
       type: listing.metadata.type,
       bathrooms: listing.metadata.bathrooms,
       bedrooms: [],
@@ -59,7 +59,12 @@ export default function ShowListing () {
           <Box sx={{ flexGrow: 1 }}>
             <Grid container spacing={2}>
               <Grid item xs={5}>
-                <ThumbnailImage>Thumbnail</ThumbnailImage>
+                <ThumbnailImage>
+                  {(listingDetails.thumbnail !== '')
+                    ? <StyledThumbnail src={listingDetails.thumbnail}/>
+                    : <div>{listingDetails.title}</div>
+                  }
+                </ThumbnailImage>
               </Grid>
               <Grid item xs={7}>
                 <h1>{listingDetails.title}</h1>
@@ -85,7 +90,7 @@ export default function ShowListing () {
                 </List>
               </Grid>
               <Grid item xs={4}>
-                <h5>${listingDetails.price}</h5>
+                <h5>${listingDetails.price} per night.</h5>
               </Grid>
             </Grid>
           </Box>

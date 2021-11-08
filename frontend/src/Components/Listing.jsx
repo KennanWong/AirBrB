@@ -10,17 +10,26 @@ import { CardActionArea } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 
 export default function Listing ({ details }) {
+  console.log('Details: ', details);
   const navigate = useNavigate();
   return (
     <div>
       <Card sx={{ maxWidth: 345 }}>
         <CardActionArea onClick={() => navigate(`/listing/${details.id}`)}>
-          <CardMedia
-            component="img"
-            height="140"
-            image="/static/images/cards/contemplative-reptile.jpg"
-            alt="green iguana"
-          />
+          { (details.thumbnail !== '')
+            ? <CardMedia
+                component="img"
+                height="140"
+                src={details.thumbnail}
+                alt={details.title}
+              />
+            : <CardMedia
+                component="img"
+                height="140"
+                image={".../Images/home-icon.png"}
+                alt={details.title}
+              />
+          }
           <CardContent>
             <Typography gutterBottom variant="h5" component="div">
               {details.title}

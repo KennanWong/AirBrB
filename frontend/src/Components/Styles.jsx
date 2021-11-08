@@ -21,12 +21,20 @@ export const ThumbnailImage = styled.div`
   width: 100%;
   height: 300px;
   background-color: #BBC4C2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 `;
 
 export const StyledLink = styled(Link)`
-    text-decoration: none;
+  text-decoration: none;
 
-    &:focus, &:hover, &:visited, &:link, &:active {
-        text-decoration: none;
-    }
+  &:focus, &:hover, &:visited, &:link, &:active {
+      text-decoration: none;
+  }
+`;
+
+export const StyledThumbnail = styled.img`
+  width: 100%;
+  height: 100%
 `;

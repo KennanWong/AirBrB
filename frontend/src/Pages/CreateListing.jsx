@@ -1,36 +1,39 @@
-/* eslint-disable */
+
 import Button from '@mui/material/Button';
 import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
 import InputAdornment from '@mui/material/InputAdornment';
-import { Container, Divider } from '@mui/material';
+import {
+  Container,
+  Divider,
+  FormHelperText,
+} from '@mui/material';
 import Input from '@mui/material/Input';
-import { styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
-import Paper from '@mui/material/Paper';
 import Grid from '@mui/material/Grid';
 import TextField from '@mui/material/TextField';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
-import { FormHelperText } from '@mui/material';
+import Select from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
 
 import { useNavigate } from 'react-router-dom';
 
 import React from 'react';
-import { ThumbnailImage } from '../Components/Styles';
-import { apiFetch, getToken } from '../Helpers';
+import { StyledThumbnail, ThumbnailImage } from '../Components/Styles';
+import { apiFetch, fileToDataUrl, getToken } from '../Helpers';
 
-const Item = styled(Paper)(({ theme }) => ({
-  ...theme.typography.body2,
-  padding: theme.spacing(1),
-  textAlign: 'center',
-  color: theme.palette.text.secondary,
-}));
+// const Item = styled(Paper)(({ theme }) => ({
+//   ...theme.typography.body2,
+//   padding: theme.spacing(1),
+//   textAlign: 'center',
+//   color: theme.palette.text.secondary,
+// }));
 
 const sendListingDetails = async (details, navigate) => {
   const body = {
     title: details.title,
-    address: details.address ,
+    address: details.address,
     price: details.price,
     thumbnail: details.thumbnail,
     metadata: {
@@ -77,19 +80,17 @@ export default function CreateListing () {
   }
 
   const handleChange = (prop) => (event) => {
-    if (event.target.value != '') {
+    if (event.target.value !== '') {
       console.log('updated value')
-      setChangedState({...changedState, [prop]: true});
+      setChangedState({ ...changedState, [prop]: true });
     } else {
-      setChangedState({...changedState, [prop]: false});
+      setChangedState({ ...changedState, [prop]: false });
     }
     setDetails({ ...details, [prop]: event.target.value });
   };
 
   const navigate = useNavigate();
-  
-  console.log(details)
-
+  console.log(details);
   return (
     <div>
       Time to create a listing
@@ -98,7 +99,31 @@ export default function CreateListing () {
           <Box sx={{ flexGrow: 1 }}>
             <Grid container spacing={2}>
               <Grid item xs={5}>
-                <ThumbnailImage>Thumbnail</ThumbnailImage>
+                <ThumbnailImage>
+                  {(details.thumbnail !== '')
+                    ? <div>
+                       <StyledThumbnail src={details.thumbnail}/>
+                      </div>
+                    : <div>
+                        <input
+                          accept="image/*"
+                          style={{ display: 'none' }}
+                          id="raised-button-file"
+                          multiple
+                          type="file"
+                          value={details.thumbnail}
+                          onChange={async (e) => {
+                            setDetails({ ...details, thumbnail: await fileToDataUrl(e.target.files[0]) })
+                          }}
+                        />
+                        <label htmlFor="raised-button-file">
+                          <Button variant="raised" component="span">
+                            Upload
+                          </Button>
+                        </label>
+                      </div>
+                  }
+                </ThumbnailImage>
               </Grid>
               <Grid item xs={7}>
                 <TextField fullWidth label="Title" onChange={handleChange('title')} variant="standard" />
@@ -116,7 +141,21 @@ export default function CreateListing () {
               <Grid item xs={8}>
                 <List sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
                   <ListItem>
-                    <TextField label="Type" onChange={handleChange('type')} variant="standard" />
+                  <FormControl variant="standard" sx={{ minWidth: 120 }}>
+                    <InputLabel>Stay Type</InputLabel>
+                    <Select
+                      value={details.type}
+                      onChange={handleChange('type')}
+                      label="Stay Type"
+                    >
+                      <MenuItem value="">
+                        <em>None</em>
+                      </MenuItem>
+                      <MenuItem value={'House'}>House</MenuItem>
+                      <MenuItem value={'Apartment'}>Apartment</MenuItem>
+                      <MenuItem value={'Room'}>Room</MenuItem>
+                    </Select>
+                  </FormControl>
                   </ListItem>
                   <ListItem>
                     <TextField label="Number of bathrooms" type="number" onChange={handleChange('bathrooms')} variant="standard" />
@@ -124,8 +163,7 @@ export default function CreateListing () {
                 </List>
               </Grid>
               <Grid item xs={4}>
-                <Item>
-                  <FormControl variant="standard">
+                <FormControl variant="standard">
                     <InputLabel htmlFor="standard-adornment-amount">Price per night</InputLabel>
                     <Input
                       id="standard-adornment-amount"
@@ -135,19 +173,18 @@ export default function CreateListing () {
                       type="number"
                     />
                   </FormControl>
-                </Item>
               </Grid>
             </Grid>
           </Box>
-        </Box> 
+        </Box>
         {enableBtn
           ? <Button variant="contained" onClick={(e) => sendListingDetails(details, navigate)}> Submit </Button>
-          :<div>
-            <Button variant="contained" disabled> Submit </Button>
-            <FormHelperText error>
-              Fields are still empty.
-            </FormHelperText>
-          </div>
+          : <div>
+              <Button variant="contained" disabled> Submit </Button>
+              <FormHelperText error>
+                Fields are still empty.
+              </FormHelperText>
+            </div>
         }
       </Container>
     </div>
