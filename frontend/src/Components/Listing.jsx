@@ -50,7 +50,7 @@ export default function Listing ({ details }) {
             <Typography gutterBottom variant="h5" component="div">
               {listingDetails.title}  
             </Typography>
-            <ListingDetailsBar bathroomNum={Number(listingDetails.bathrooms)} bedroomNum={Number(listingDetails.bathrooms)}/> 
+            <ListingDetailsBar bathroomNum={Number(listingDetails.bathrooms)} bedroomNum={Number(listingDetails.beds)}/> 
           </CardContent>
         </CardActionArea>
       </Card>

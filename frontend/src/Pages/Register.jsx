@@ -5,7 +5,8 @@ import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
 import { Container } from '@mui/material';
 import {
-  Link
+  Link,
+  useNavigate,
 } from 'react-router-dom'
 
 // Self defined Components
@@ -60,7 +61,9 @@ export default function Register ({ setActiveUser }) {
     })
   }
 
-  const submitRegister = async (name, email, password, confirmPassword, setActiveUser) => {
+  const navigate = useNavigate();
+  
+  const submitRegister = async (name, email, password, confirmPassword, setActiveUser, navigate) => {
     // If passwords do not match
     if (password !== confirmPassword) {
       console.log('passwords not the same');
@@ -80,7 +83,7 @@ export default function Register ({ setActiveUser }) {
       console.log(errorMsg);
       return;
     } 
-
+  
     // If fields are empty
     if (name == '' || email == '' || password == '' || confirmPassword == '') {
       setFieldInState('name', true, errorStatus, setErrorStatus);
@@ -103,6 +106,8 @@ export default function Register ({ setActiveUser }) {
       console.log(ret.token);
       setToken(ret.token);
       setEmail(email);
+      setActiveUser(true);
+      navigate('/');
     } catch (e) {
       setErrorStatus({
         email: true,
@@ -153,7 +158,7 @@ export default function Register ({ setActiveUser }) {
                 setState={setConfirmPassword}/>
             </div>
             <br/>
-            <Button variant="contained" onClick={(e) => submitRegister(name, email, passwordField.password, confirmPassword.password, setActiveUser) }>Register</Button>
+            <Button variant="contained" onClick={(e) => submitRegister(name, email, passwordField.password, confirmPassword.password, setActiveUser, navigate) }>Register</Button>
           </StyledForm>
           <Divider variant="middle"/>
           <StyledForm>

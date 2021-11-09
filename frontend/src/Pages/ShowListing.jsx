@@ -15,6 +15,7 @@ import {
   getListingDetails,
 } from '../Helpers';
 import ListingDetailsBar from '../Components/ListingDetailsBar';
+import { Bedrooms } from '../Components/Bedrooms';
 
 export default function ShowListing () {
   const [listingDetails, setListingDetails] = React.useState({
@@ -24,7 +25,8 @@ export default function ShowListing () {
     thumbnail: '',
     type: '',
     bathrooms: 0,
-    bedrooms: [],
+    beds: 0,
+    bedroomsList: [],
   })
   const params = useParams();
   const id = params.id;
@@ -60,12 +62,15 @@ export default function ShowListing () {
           <Box sx={{ flexGrow: 1 }}>
             <Grid container spacing={2}>
               <Grid item xs={8}>
-                <List sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
+                <List sx={{ width: '90%', bgcolor: 'background.paper' }}>
                   <ListItem>
-                    <ListingDetailsBar bedroomNum={listingDetails.bathrooms} bathroomNum={listingDetails.bathrooms}/>
+                    <ListingDetailsBar bedroomNum={listingDetails.beds} bathroomNum={listingDetails.bathrooms}/>
                   </ListItem>
                   <ListItem>
                     <h2>Entire {listingDetails.type}.</h2>
+                  </ListItem>
+                  <ListItem>
+                    <Bedrooms isInput={false} bedroomNum={listingDetails.bedroomsList.length} listingDetails={listingDetails}/>
                   </ListItem>
                 </List>
               </Grid>

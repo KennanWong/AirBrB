@@ -20,7 +20,8 @@ export const WrappedContainer = styled.div`
 export const ThumbnailImage = styled.div`
   width: 100%;
   height: 300px;
-  background-color: #BBC4C2;
+  background-color: #f5f5f5;
+  border-radius: 5px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -37,4 +38,9 @@ export const StyledLink = styled(Link)`
 export const StyledThumbnail = styled.img`
   width: 100%;
   height: 100%
+`;
+
+export const CentredFlex = styled.div`
+  display: flex;
+  align-items: center;
 `;

@@ -36,6 +36,7 @@ const ListingsContainer = styled.div`
   align-content: flex-start;
   justify-content: flex-start;
   gap: 20px;
+  flex-wrap: wrap;
 `;
 
 export default function MyListings () {

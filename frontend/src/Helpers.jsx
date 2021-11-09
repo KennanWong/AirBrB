@@ -119,7 +119,8 @@ export const getListingDetails = async (id, listingDetails, setListingDetails) =
       thumbnail: listing.thumbnail,
       type: listing.metadata.type,
       bathrooms: Number(listing.metadata.bathrooms),
-      bedrooms: [],
+      beds: Number(listing.metadata.beds),
+      bedroomsList: listing.metadata.bedroomsList,
     })
     console.log(listingDetails);
   } catch (e) {
