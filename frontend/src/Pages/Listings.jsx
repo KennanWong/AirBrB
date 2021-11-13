@@ -3,23 +3,18 @@ import React from 'react';
 import Box from '@mui/material/Box';
 import { Container, Divider } from '@mui/material';
 
-import { apiFetch } from '../Helpers';
+import {
+  getListings,
+} from '../Helpers';
 import Listing from '../Components/Listing';
-
-const getListings = async (listingsList, setListingsList) => {
-  const ret = await apiFetch('GET', '/listings', null, {});
-  const curListings = ret.listings
-  console.log(curListings);
-  for (const item in curListings) {
-    console.log(curListings[item]);
-    setListingsList([...listingsList, curListings[item]]);
-  }
-}
+import {
+  ListingsBar
+} from '../Components/Styles';
 
 export default function Listings () {
   const [listingsList, setListingsList] = React.useState([]);
   React.useEffect(() => {
-    getListings(listingsList, setListingsList);
+    getListings(false, listingsList, setListingsList);
   }, []);
   console.log(listingsList);
   return (
@@ -28,9 +23,11 @@ export default function Listings () {
       <Divider/>
       <br/>
       <Box sx={{ flexGrow: 1 }}>
-        {listingsList.map((listing, key) => (
-          <Listing details={listing} key={key}></Listing>
-        ))}
+        <ListingsBar>
+          {listingsList.map((listing, key) => {
+            return <Listing details={listing} key={key}></Listing>
+          })}
+        </ListingsBar>
       </Box>
       <br/>
       <Divider></Divider>

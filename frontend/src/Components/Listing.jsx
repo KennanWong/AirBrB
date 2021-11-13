@@ -11,8 +11,10 @@ import { useNavigate } from 'react-router-dom';
 import ListingDetailsBar from './ListingDetailsBar';
 
 import {
+  getEmail,
   getListingDetails
 } from '../Helpers.jsx'
+import UserRating from './Rating';
 
 export default function Listing ({ details }) {
   const [listingDetails, setListingDetails] = React.useState({
@@ -23,15 +25,27 @@ export default function Listing ({ details }) {
     type: '',
     bathrooms: 0,
     bedrooms: [],
+    reviews: [],
+    ammenities: [],
   })
   React.useEffect(() => {
     getListingDetails(details.id, listingDetails, setListingDetails);
   }, [])
   const navigate = useNavigate();
+
+  const navigateTo = () => {
+    if (details.owner === getEmail()) {
+      navigate(`/editListing/${details.id}`)
+    } else {
+      navigate(`/listing/${details.id}`)
+    }
+    
+  }
+
   return (
     <div>
-      <Card sx={{ maxWidth: 345 }}>
-        <CardActionArea onClick={() => navigate(`/listing/${details.id}`)}>
+      <Card sx={{ minWidth: 345 }}>
+        <CardActionArea onClick={() => navigateTo()}>
           { (listingDetails.thumbnail !== '')
             ? <CardMedia
                 component="img"
@@ -51,6 +65,9 @@ export default function Listing ({ details }) {
               {listingDetails.title}  
             </Typography>
             <ListingDetailsBar bathroomNum={Number(listingDetails.bathrooms)} bedroomNum={Number(listingDetails.beds)}/> 
+            <h3>Entire {listingDetails.type}. </h3>
+            <h4> ${listingDetails.price} per night.</h4>
+            <UserRating readOnly={true} details={listingDetails} setDetails={setListingDetails}/> 
           </CardContent>
         </CardActionArea>
       </Card>

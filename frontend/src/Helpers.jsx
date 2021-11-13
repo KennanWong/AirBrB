@@ -109,7 +109,7 @@ export const getListingDetails = async (id, listingDetails, setListingDetails) =
   try {
     const ret = await apiFetch('GET', `/listings/${id}`, null, {});
     const listing = ret.listing;
-    console.log(listing);
+    console.log('listing deets', listing);
 
     setListingDetails({
       ...listingDetails,
@@ -121,9 +121,27 @@ export const getListingDetails = async (id, listingDetails, setListingDetails) =
       bathrooms: Number(listing.metadata.bathrooms),
       beds: Number(listing.metadata.beds),
       bedroomsList: listing.metadata.bedroomsList,
+      reviews: listing.reviews,
+      ammenities: listing.metadata.ammenities,
     })
-    console.log(listingDetails);
   } catch (e) {
     alert(e);
   }
+}
+
+export const getListings = async (myListings, listingsList, setListingsList) => {
+  console.log('Getting listings')
+  const ret = await apiFetch('GET', '/listings', null, {});
+  const curListings = ret.listings
+  for (const item in curListings) {
+    const listing = curListings[item];
+    if (myListings) {
+      if (listing.owner === getEmail()) {
+        listingsList.push(listing);
+      }
+    } else {
+      listingsList.push(listing);
+    }
+  }
+  setListingsList([...listingsList]);
 }

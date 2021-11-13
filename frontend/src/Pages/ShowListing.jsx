@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 import React from 'react';
 
 import {
@@ -16,17 +18,29 @@ import {
 } from '../Helpers';
 import ListingDetailsBar from '../Components/ListingDetailsBar';
 import { Bedrooms } from '../Components/Bedrooms';
+import UserRating from '../Components/Rating';
+import Ammenities from '../Components/Ammenities';
+import { AddressString } from '../Components/Address';
 
 export default function ShowListing () {
   const [listingDetails, setListingDetails] = React.useState({
     title: '',
-    address: '',
+    address: {
+      streetAddress: '',
+      apartment: '',
+      city: '',
+      state: '',
+      postcode: '',
+      country: '',
+    },
     price: 0,
     thumbnail: '',
     type: '',
     bathrooms: 0,
     beds: 0,
     bedroomsList: [],
+    reviews: [],
+    ammenities: [],
   })
   const params = useParams();
   const id = params.id;
@@ -34,7 +48,7 @@ export default function ShowListing () {
     getListingDetails(id, listingDetails, setListingDetails);
   }, [])
 
-  console.log('listing details', listingDetails);
+  console.log(listingDetails);
 
   return (
     <Container>
@@ -52,7 +66,7 @@ export default function ShowListing () {
               <Grid item xs={7}>
                 <h1>{listingDetails.title}</h1>
                 <br/>
-                <h2>{listingDetails.address}</h2>
+                <AddressString address={listingDetails.address}/>
               </Grid>
             </Grid>
           </Box>
@@ -69,8 +83,17 @@ export default function ShowListing () {
                   <ListItem>
                     <h2>Entire {listingDetails.type}.</h2>
                   </ListItem>
+                  <Divider/>
                   <ListItem>
                     <Bedrooms isInput={false} bedroomNum={listingDetails.bedroomsList.length} listingDetails={listingDetails}/>
+                  </ListItem>
+                  <Divider/>
+                  <ListItem>
+                    <Ammenities isInput={false} details={listingDetails} setListingDetails={setListingDetails}/>
+                  </ListItem>
+                  <Divider/>
+                  <ListItem>
+                    <UserRating readOnly={false} details={listingDetails} setDetails={setListingDetails}/>
                   </ListItem>
                 </List>
               </Grid>

@@ -44,3 +44,15 @@ export const CentredFlex = styled.div`
   display: flex;
   align-items: center;
 `;
+
+export const ListingsBar = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  overflow: auto;
+`;
+
+export const SpacedFlex = styled.div`
+  display: flex;
+  justify-content: space-between;
+`;

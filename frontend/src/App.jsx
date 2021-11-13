@@ -130,8 +130,9 @@ function Body ({ activeUser, setActiveUser }) {
           </Route>
           <Route path="/listings" element={<Listings/>}/>
           <Route path="/myListings" element={<MyListings/>}/>
-          <Route path="/createListing" element={<CreateListing/>}/>
+          <Route path="/createListing" element={<CreateListing newListing={true}/>}/>
           <Route path="/listing/:id" element={<ShowListing/>}></Route>
+          <Route path="/editListing/:id" element={<CreateListing newListing={false}/>}/>
         </Routes>
       </BrowserRouter>
     </div>

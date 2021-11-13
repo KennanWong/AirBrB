@@ -7,13 +7,15 @@ import TextField from '@mui/material/TextField';
 // MUI
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
-import { CardActionArea } from '@mui/material';
+import { CardActionArea, IconButton } from '@mui/material';
 import Typography from '@mui/material/Typography';
 // import Typography from '@mui/material/Typography';
 
 // MUI icon
 import BedroomParentOutlinedIcon from '@mui/icons-material/BedroomParentOutlined';
-import { CentredFlex } from './Styles';
+import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
+
+import { CentredFlex, SpacedFlex } from './Styles';
 
 Bedroom.propTypes = {
   isInput: PropTypes.bool,
@@ -49,21 +51,26 @@ function BedroomInput ({ bedroomNum, listingDetails, setListingDetails }) {
     for (const room in bedroomsList) {
       sumBeds += Number(bedroomsList[room].numBeds);
     }
-
-    if (sumBeds > listingDetails.beds) {
-      setListingDetails({ ...listingDetails, bedroomsList: bedroomsList, beds: sumBeds })
-    } else {
-      setListingDetails({ ...listingDetails, bedroomsList: bedroomsList })
-    }
+    setListingDetails({ ...listingDetails, bedroomsList: bedroomsList, beds: sumBeds })
   }
 
   return (
     <Card sx={{ width: 200, height: 150 }}>
       <React.Fragment>
         <CardContent>
-          <CentredFlex>
-            <BedroomParentOutlinedIcon/> Bedroom {bedroomNum}.
-          </CentredFlex>
+          <SpacedFlex>
+            <CentredFlex> <BedroomParentOutlinedIcon/> Bedroom {bedroomNum}. </CentredFlex>
+            <IconButton
+              onClick={(e) => {
+                const bedroomsList = listingDetails.bedroomsList;
+                bedroomsList.splice(bedroomNum - 1, bedroomNum);
+                setListingDetails({ ...listingDetails, bedroomsList: bedroomsList })
+                console.log('Remove this bedroom')
+              }}
+            >
+              <DeleteOutlinedIcon/>
+            </IconButton>
+          </SpacedFlex>
           <TextField value={listingDetails.bedroomsList[bedroomNum - 1].numBeds} label="Number of beds" type="number" variant="standard" onChange={(e) => setNumBeds(e.target.value)} />
         </CardContent>
       </React.Fragment>
@@ -85,7 +92,10 @@ function BedroomDetail ({ bedroomNum, bedroomDetails }) {
             <BedroomParentOutlinedIcon/> Bedroom {bedroomNum}.
           </CentredFlex>
           <br/>
-          {bedroomDetails.numBeds} beds.
+          { (bedroomDetails.numBeds === '1')
+            ? <div> {bedroomDetails.numBeds} bed. </div>
+            : <div> {bedroomDetails.numBeds} beds. </div>
+          }
         </CardContent>
       </React.Fragment>
     </Card>
