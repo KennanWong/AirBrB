@@ -34,7 +34,7 @@ export default function MyListings () {
       <Box sx={{ flexGrow: 1 }}>
         <ListingsBar>
           {listingsList.map((listing, key) => {
-            return <Listing details={listing} key={key}/>
+            return <Listing publicView={false} details={listing} key={key}/>
           })}
         </ListingsBar>
       </Box>

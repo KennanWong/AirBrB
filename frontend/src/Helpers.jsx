@@ -110,22 +110,67 @@ export const getListingDetails = async (id, listingDetails, setListingDetails) =
     const ret = await apiFetch('GET', `/listings/${id}`, null, {});
     const listing = ret.listing;
     console.log('listing deets', listing);
-
-    setListingDetails({
-      ...listingDetails,
-      title: listing.title,
-      address: listing.address,
-      price: Number(listing.price),
-      thumbnail: listing.thumbnail,
-      type: listing.metadata.type,
-      bathrooms: Number(listing.metadata.bathrooms),
-      beds: Number(listing.metadata.beds),
-      bedroomsList: listing.metadata.bedroomsList,
-      reviews: listing.reviews,
-      ammenities: listing.metadata.ammenities,
-    })
+    if (listingDetails != null) {
+      setListingDetails({
+        ...listingDetails,
+        title: listing.title,
+        address: listing.address,
+        price: Number(listing.price),
+        thumbnail: listing.thumbnail,
+        type: listing.metadata.type,
+        bathrooms: Number(listing.metadata.bathrooms),
+        beds: Number(listing.metadata.beds),
+        bedroomsList: listing.metadata.bedroomsList,
+        reviews: listing.reviews,
+        ammenities: listing.metadata.ammenities,
+        public: listing.metadata.public,
+      })
+    }
+    console.log(listing.metadata.public);
+    return listing.metadata.public;
   } catch (e) {
     alert(e);
+  }
+}
+
+export const sendListingDetails = async (newListing, listingId, details, navigate) => {
+  let sumBeds = 0;
+  for (const room in details.bedroomsList) {
+    sumBeds += Number(details.bedroomsList[room]);
+  }
+
+  if (sumBeds < details.beds) {
+    details.beds = sumBeds
+  }
+
+  const body = {
+    title: details.title,
+    address: details.address,
+    price: details.price,
+    thumbnail: details.thumbnail,
+    metadata: {
+      reviews: [],
+      bathrooms: details.bathrooms,
+      type: details.type,
+      beds: details.beds,
+      bedroomsList: details.bedroomsList,
+      ammenities: details.ammenities,
+      public: details.public,
+    }
+  }
+  try {
+    let ret;
+    if (newListing) {
+      ret = await apiFetch('POST', '/listings/new', getToken(), body);
+    } else {
+      ret = await apiFetch('PUT', `/listings/${listingId}`, getToken(), body);
+    }
+    console.log(ret);
+    if (navigate !== null) {
+      navigate('/myListings');
+    }
+  } catch (e) {
+    alert(e)
   }
 }
 
@@ -140,7 +185,11 @@ export const getListings = async (myListings, listingsList, setListingsList) => 
         listingsList.push(listing);
       }
     } else {
-      listingsList.push(listing);
+      const publicStatus = await getListingDetails(listing.id, null, null);
+      if (publicStatus) {
+        console.log('listing is public');
+        listingsList.push(listing);
+      }
     }
   }
   setListingsList([...listingsList]);

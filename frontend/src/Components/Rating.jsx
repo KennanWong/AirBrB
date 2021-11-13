@@ -8,7 +8,7 @@ import Typography from '@mui/material/Typography';
 import PropTypes from 'prop-types'
 
 import {
-  getEmail,
+  getEmail, sendListingDetails,
 } from '../Helpers'
 
 const getReviewRating = (reviews) => {
@@ -23,7 +23,7 @@ const getReviewRating = (reviews) => {
   return rating;
 }
 
-const addReview = (value, details, setDetails) => {
+const addReview = (listingId, value, details, setDetails) => {
   const reviews = details.reviews;
   for (let i = 0; i < reviews.length; i++) {
     if (reviews[i].email === getEmail()) {
@@ -32,17 +32,23 @@ const addReview = (value, details, setDetails) => {
       } else {
         reviews.splice(i, i + 1);
       }
-      
-      setDetails({...details, reviews: reviews})
+      setDetails({...details, reviews: reviews});
+      sendListingDetails(false, listingId, details, null);
       return;
     }
   }
-  const newReview = {
-    email: getEmail(),
-    review: value,
+  if (getEmail() !== null) {
+    const newReview = {
+      email: getEmail(),
+      review: value,
+    }
+    reviews.push(newReview);
+    setDetails({...details, reviews: reviews});
+    sendListingDetails(false, listingId, details, null);
+  } else {
+    alert('Login to leave a review');
   }
-  reviews.push(newReview);
-  setDetails({...details, reviews: reviews})
+  
 }
 
 const getUserRating = (reviews) => {
@@ -62,7 +68,7 @@ UserRating.propTypes = {
   setDetails: PropTypes.func,
 }
 
-export default function UserRating ({ readOnly, details, setDetails }) {
+export default function UserRating ({ listingId, readOnly, details, setDetails }) {
   const [value, setValue] = React.useState(getUserRating(details.reviews));
   const [communityValue, setCommunityValue] = React.useState(getReviewRating(details.reviews));
 
@@ -81,7 +87,7 @@ export default function UserRating ({ readOnly, details, setDetails }) {
               name="simple-controlled"
               value={value}
               onChange={(event, newValue) => {
-                addReview(newValue, details, setDetails);
+                addReview(listingId, newValue, details, setDetails);
                 setCommunityValue(getReviewRating(details.reviews));
                 setValue(newValue);
               }}

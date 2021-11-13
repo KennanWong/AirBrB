@@ -16,7 +16,7 @@ import {
 } from '../Helpers.jsx'
 import UserRating from './Rating';
 
-export default function Listing ({ details }) {
+export default function Listing ({ publicView, details }) {
   const [listingDetails, setListingDetails] = React.useState({
     title: '',
     address: '',
@@ -34,7 +34,7 @@ export default function Listing ({ details }) {
   const navigate = useNavigate();
 
   const navigateTo = () => {
-    if (details.owner === getEmail()) {
+    if (details.owner === getEmail() && !publicView) {
       navigate(`/editListing/${details.id}`)
     } else {
       navigate(`/listing/${details.id}`)

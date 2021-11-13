@@ -93,7 +93,7 @@ export default function ShowListing () {
                   </ListItem>
                   <Divider/>
                   <ListItem>
-                    <UserRating readOnly={false} details={listingDetails} setDetails={setListingDetails}/>
+                    <UserRating listingId={id} readOnly={false} details={listingDetails} setDetails={setListingDetails}/>
                   </ListItem>
                 </List>
               </Grid>

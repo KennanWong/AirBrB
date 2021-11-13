@@ -26,7 +26,7 @@ import PropTypes from 'prop-types';
 
 import React from 'react';
 import { SpacedFlex, StyledThumbnail, ThumbnailImage } from '../Components/Styles';
-import { apiFetch, fileToDataUrl, getListingDetails, getToken } from '../Helpers';
+import { apiFetch, fileToDataUrl, getListingDetails, getToken, sendListingDetails } from '../Helpers';
 
 import styled from 'styled-components';
 // MUI Icons
@@ -43,46 +43,6 @@ const DataEnty = styled.div`
   padding-left: 15px;
   width: 100%;
 `;
-
-
-const sendListingDetails = async (newListing, listingId, details, navigate) => {
-  let sumBeds = 0;
-  for (const room in details.bedroomsList) {
-    sumBeds += Number(details.bedroomsList[room]);
-  }
-
-  if (sumBeds < details.beds) {
-    details.beds = sumBeds
-  }
-
-  const body = {
-    title: details.title,
-    address: details.address,
-    price: details.price,
-    thumbnail: details.thumbnail,
-    metadata: {
-      reviews: [],
-      bathrooms: details.bathrooms,
-      type: details.type,
-      beds: details.beds,
-      bedroomsList: details.bedroomsList,
-      ammenities: details.ammenities,
-      public: details.public,
-    }
-  }
-  try {
-    let ret;
-    if (newListing) {
-      ret = await apiFetch('POST', '/listings/new', getToken(), body);
-    } else {
-      ret = await apiFetch('PUT', `/listings/${listingId}`, getToken(), body);
-    }
-    console.log(ret);
-    navigate('/myListings');
-  } catch (e) {
-    alert(e)
-  }
-}
 
 NumberOptions.propTypes = {
   num: PropTypes.number,
@@ -106,27 +66,27 @@ CreateListing.propTypes = {
   listingId: PropTypes.number,
 }
 
-const defaultState = {
-  title: '',
-  address: {
-    streetAddress: '',
-    apartment: '',
-    city: '',
-    state: '',
-    postcode: '',
-    country: '',
-  },
-  price: 0,
-  thumbnail: '',
-  type: '',
-  bathrooms: '',
-  beds: '',
-  bedroomsList: [],
-  ammenities: [],
-  public: false,
-};
-
 export default function CreateListing ({ newListing }) {
+
+  const defaultState = {
+    title: '',
+    address: {
+      streetAddress: '',
+      apartment: '',
+      city: '',
+      state: '',
+      postcode: '',
+      country: '',
+    },
+    price: 0,
+    thumbnail: '',
+    type: '',
+    bathrooms: '',
+    beds: '',
+    bedroomsList: [],
+    ammenities: [],
+    public: false,
+  };
 
   const [details, setDetails] = React.useState(defaultState);
 
@@ -192,45 +152,44 @@ export default function CreateListing ({ newListing }) {
           <Box sx={{ flexGrow: 1 }}>
             <Grid container spacing={2}>
               <Grid item xs={5}>
-                <ThumbnailImage
-                  onMouseOut={() => {
-                    setToggleUpload(true);
-                    console.log('moved away');
-                  }}
-                >
-                  {toggleUpload
-                    ? <div>
-                       <StyledThumbnail
+                {toggleUpload
+                  ? <ThumbnailImage>
+                      <StyledThumbnail
                         onMouseOver={() => {
                           setToggleUpload(false);
                           console.log('hovering');
                         }}
-                        src={details.thumbnail}/>
-                      </div>
-                    : <div>
-                        <input
-                          accept="image/*"
-                          style={{ display: 'none' }}
-                          id="raised-button-file"
-                          multiple
-                          type="file"
-                          value={''}
-                          onChange={async (e) => {
-                            setDetails({ ...details, thumbnail: await fileToDataUrl(e.target.files[0]) })
-                            setToggleUpload(true);
-                          }}
-                        />
-                        <label htmlFor="raised-button-file">
-                          <Button
-                            variant="raised"
-                            component="span"
-                          >
-                            Upload
-                          </Button>
-                        </label>
-                      </div>
-                  }
-                </ThumbnailImage>
+                        src={details.thumbnail}
+                      />
+                    </ThumbnailImage>
+                  : <ThumbnailImage
+                      onMouseOut={() => {
+                        setToggleUpload(true);
+                        console.log('moved away');
+                      }}
+                    >
+                      <input
+                        accept="image/*"
+                        style={{ display: 'none' }}
+                        id="raised-button-file"
+                        multiple
+                        type="file"
+                        value={''}
+                        onChange={async (e) => {
+                          setDetails({ ...details, thumbnail: await fileToDataUrl(e.target.files[0]) })
+                          setToggleUpload(true);
+                        }}
+                      />
+                      <label htmlFor="raised-button-file">
+                        <Button
+                          variant="raised"
+                          component="span"
+                        >
+                          Upload
+                        </Button>
+                      </label>
+                    </ThumbnailImage>
+                }
               </Grid>
               <Grid item xs={7}>
                 <DataEnty>
@@ -254,11 +213,6 @@ export default function CreateListing ({ newListing }) {
                   <ListItem>
                     <DataEnty>
                       <TextField value={details.bathrooms} label="Number of bathrooms" type="number" onChange={handleChange('bathrooms')} variant="standard" />
-                    </DataEnty>
-                  </ListItem>
-                  <ListItem>
-                    <DataEnty>
-                      <TextField value={details.beds} label="Number of beds" type="number" onChange={handleChange('beds')} variant="standard" />
                     </DataEnty>
                   </ListItem>
                   <ListItem>

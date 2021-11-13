@@ -103,7 +103,7 @@ function AddAmmenitie ({ details, setDetails }) {
       {!hasError
         ? <TextField
           size="small"
-          label="Add Ammenitie"
+          label="Add Ammenity"
           type="text"
           variant="standard"
           value={value}
@@ -113,7 +113,7 @@ function AddAmmenitie ({ details, setDetails }) {
         />
         : <TextField
           size="small"
-          label="Add Ammenitie"
+          label="Add Ammenity"
           type="text"
           variant="standard"
           value={value}
@@ -122,7 +122,7 @@ function AddAmmenitie ({ details, setDetails }) {
             setValue(e.target.value);
             setHasError(false);
           }}
-          helperText="Please enter an ammenitie."
+          helperText="Please enter an ammenity."
         />
       }
     </ListItem>
