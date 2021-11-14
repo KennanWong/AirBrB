@@ -36,6 +36,8 @@ import { Bedrooms } from '../Components/Bedrooms';
 import Ammenities from '../Components/Ammenities';
 import Address from '../Components/Address';
 
+import home from '../Images/home.png';
+
 const DataEnty = styled.div`
   background-color: #f5f5f5;
   border-radius: 5px;
@@ -79,7 +81,7 @@ export default function CreateListing ({ newListing }) {
       country: '',
     },
     price: 0,
-    thumbnail: '',
+    thumbnail: home,
     type: '',
     bathrooms: '',
     beds: '',
@@ -99,7 +101,7 @@ export default function CreateListing ({ newListing }) {
     React.useEffect(() => {
       getListingDetails(id, details, setDetails);
     }, []);
-  }
+  } 
 
   let enableBtn = true;
   for (const item in details) {

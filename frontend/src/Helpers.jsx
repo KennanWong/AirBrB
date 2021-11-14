@@ -110,6 +110,7 @@ export const getListingDetails = async (id, listingDetails, setListingDetails) =
     const ret = await apiFetch('GET', `/listings/${id}`, null, {});
     const listing = ret.listing;
     console.log('listing deets', listing);
+
     if (listingDetails != null) {
       setListingDetails({
         ...listingDetails,
