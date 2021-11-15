@@ -21,6 +21,7 @@ import { Bedrooms } from '../Components/Bedrooms';
 import UserRating from '../Components/Rating';
 import Ammenities from '../Components/Ammenities';
 import { AddressString } from '../Components/Address';
+import Calendar from '../Components/Calendar';
 
 export default function ShowListing () {
   const [listingDetails, setListingDetails] = React.useState({
@@ -99,6 +100,7 @@ export default function ShowListing () {
               </Grid>
               <Grid item xs={4}>
                 <h5>${listingDetails.price} per night.</h5>
+                <Calendar/>
               </Grid>
             </Grid>
           </Box>

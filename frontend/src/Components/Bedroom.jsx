@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 import React from 'react';
 
 // import styled from 'styled-components';
@@ -9,10 +11,16 @@ import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import { CardActionArea, IconButton } from '@mui/material';
 import Typography from '@mui/material/Typography';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Select from '@mui/material/Select';
+
 // import Typography from '@mui/material/Typography';
 
 // MUI icon
 import BedroomParentOutlinedIcon from '@mui/icons-material/BedroomParentOutlined';
+import BedroomChildOutlinedIcon from '@mui/icons-material/BedroomChildOutlined';
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
 
 import { CentredFlex, SpacedFlex } from './Styles';
@@ -43,6 +51,11 @@ BedroomInput.propTypes = {
 }
 
 function BedroomInput ({ bedroomNum, listingDetails, setListingDetails }) {
+  const [bed, setBed] = React.useState({
+    numBeds: '',
+    type: '',
+  })
+  /*
   const setNumBeds = (value) => {
     const bedroomsList = listingDetails.bedroomsList;
     bedroomsList[bedroomNum - 1].numBeds = value;
@@ -53,25 +66,57 @@ function BedroomInput ({ bedroomNum, listingDetails, setListingDetails }) {
     }
     setListingDetails({ ...listingDetails, bedroomsList: bedroomsList, beds: sumBeds })
   }
+  */
+  const handleChange = (prop, value) => {
+    if (prop === 'numBeds' && bed.type === '') {
+      setBed({ ...bed, ['numBeds']: value, ['type']: 'Single' });
+    }
+    else if (prop === 'type' && bed.numBeds === '') {
+      setBed({ ...bed, ['numBeds']: 1, ['type']: value });
+    } else {
+      setBed({ ...bed, [prop]: value });
+    }
+    
+  }
 
   return (
-    <Card sx={{ width: 200, height: 150 }}>
+    <Card sx={{ width: 250, height: 200 }}>
       <React.Fragment>
         <CardContent>
           <SpacedFlex>
-            <CentredFlex> <BedroomParentOutlinedIcon/> Bedroom {bedroomNum}. </CentredFlex>
+            <CentredFlex> Bedroom {bedroomNum}. </CentredFlex>
             <IconButton
               onClick={(e) => {
-                const bedroomsList = listingDetails.bedroomsList;
-                bedroomsList.splice(bedroomNum - 1, bedroomNum);
-                setListingDetails({ ...listingDetails, bedroomsList: bedroomsList })
+                const bedroomsListCpy = listingDetails.bedroomsList;
+                bedroomsListCpy.splice(bedroomNum - 1, bedroomNum);
+                setListingDetails({ ...listingDetails, bedroomsList: bedroomsListCpy })
                 console.log('Remove this bedroom')
               }}
             >
               <DeleteOutlinedIcon/>
             </IconButton>
           </SpacedFlex>
-          <TextField value={listingDetails.bedroomsList[bedroomNum - 1].numBeds} label="Number of beds" type="number" variant="standard" onChange={(e) => setNumBeds(e.target.value)} />
+          <SpacedFlex>
+            <TextField value={bed.numBeds} label="Number of beds" type="number" variant="standard" onChange={(e) => handleChange('numBeds', e.target.value)} />
+            <FormControl variant="standard" sx={{ minWidth: 100 }}>
+              <InputLabel> Bed Type </InputLabel>
+              <Select
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                value={bed.type}
+                label="Age"
+                autoWidth
+                onChange={(e) => {
+                  handleChange('type', e.target.value)
+                }}
+              >
+                <MenuItem value={'Single'}>Single</MenuItem>
+                <MenuItem value={'Double'}>Double</MenuItem>
+                <MenuItem value={'Queen'}>Queen</MenuItem>
+                <MenuItem value={'King'}>King</MenuItem>
+              </Select>
+            </FormControl>
+          </SpacedFlex>
         </CardContent>
       </React.Fragment>
     </Card>
@@ -85,7 +130,7 @@ BedroomDetail.propTypes = {
 
 function BedroomDetail ({ bedroomNum, bedroomDetails }) {
   return (
-    <Card sx={{ width: 200, height: 150 }}>
+    <Card sx={{ width: 250, height: 200 }}>
       <React.Fragment>
         <CardContent>
           <CentredFlex>
@@ -115,8 +160,8 @@ export function AddBedroom ({ listingDetails, setListingDetails }) {
     setListingDetails({ ...listingDetails, bedroomsList: bedroomsList });
   }
   return (
-    <Card sx={{ width: 200, height: 150 }}>
-      <CardActionArea sx={{ width: 200, height: 150 }} onClick={() => addBedroomFunc()}>
+    <Card sx={{ width: 250, height: 200 }}>
+      <CardActionArea sx={{ width: 250, height: 200 }} onClick={() => addBedroomFunc()}>
         <CardContent>
           <Typography gutterBottom variant="body1" sx={{ textAlign: 'center' }}>
             Add a new Bedroom

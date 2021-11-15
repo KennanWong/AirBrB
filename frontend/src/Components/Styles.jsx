@@ -55,4 +55,5 @@ export const ListingsBar = styled.div`
 export const SpacedFlex = styled.div`
   display: flex;
   justify-content: space-between;
+  gap: 10px;
 `;
