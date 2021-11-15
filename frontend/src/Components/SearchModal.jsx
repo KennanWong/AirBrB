@@ -26,16 +26,16 @@ import BedIcon from '@mui/icons-material/Bed';
 import PropTypes from 'prop-types';
 
 import { CentredFlex } from './Styles';
-import { getListings } from '../Helpers';
+import { getListingDetails, getListings } from '../Helpers';
 
 const style = {
   position: 'absolute',
   top: '50%',
   left: '50%',
   transform: 'translate(-50%, -50%)',
-  width: 400,
   bgcolor: 'background.paper',
-  border: '2px solid #000',
+  border: '2px solid #242424',
+  borderRadius: '15px',
   boxShadow: 24,
   p: 4,
 };
@@ -45,15 +45,78 @@ SearchModal.propTypes = {
   setListingsList: PropTypes.func,
 }
 
-export default function SearchModal ({ listingsList, setListingsList }) {
+const getMinMax = async (listingsList, param) => {
+  if (listingsList.length === 0) {
+    return {
+      min: 0,
+      max: 100,
+    };
+  }
+  let details;
+  let min;
+  let max;
+  if (param === 'price') {
+    min = listingsList[0].price;
+    max = min;
+  } else if (param === 'bedrooms') {
+    details = await getListingDetails(listingsList[0].id, null, null);
+    min = details.metadata.bedroomsList.length;
+    max = min;
+  } 
+  
+  for (let i = 1; i < listingsList.length; i++) {
+    let val;
+    if (param === 'price') {
+      val = listingsList[i].price;
+    } else if (param === 'bedrooms') {
+      details = await getListingDetails(listingsList[i].id, null, null);
+      val = details.metadata.bedroomsList.length;
+    }
+    if (min > val) {
+      min = val;
+    }
+    if (max < val) {
+      max = val;
+    }
+  }
+
+  if (min === max) {
+    min = 0;
+  }
+  return {
+    min: min,
+    max: max,
+  };
+}
+
+export default function SearchModal ({ setListingsList }) {
+  const [listingsList, setListings] = React.useState([]);
   const [open, setOpen] = React.useState(false);
-  const handleOpen = () => setOpen(true);
+  const handleOpen = () => {
+    setOpen(true)
+    setBounds();
+  };
   const handleClose = () => setOpen(false);
 
+
+  const [priceBounds, setPriceBounds] = React.useState({
+    min: 0,
+    max: 100,
+  });
+
+  const [bedroomsBounds, setBedroomsBounds] = React.useState({
+    min: 0,
+    max: 100,
+  });
+  
+  React.useEffect(async () => {
+    await getListings(false, listingsList, setListings, null);
+  }, []);
+
   const [search, setSearch] = React.useState('')
-  const [price, setPrice] = React.useState([20, 37]);
+  const [price, setPrice] = React.useState([0, 1000000000000]);
   const [dates, setDates] = React.useState([null, null]);
-  const [bedrooms, setBedrooms] = React.useState([20, 37]);
+  const [bedrooms, setBedrooms] = React.useState([0, 1000000000]);
   const [rating, setRating] = React.useState(0);
 
   const handlePrice = (event, newValue) => {
@@ -62,6 +125,21 @@ export default function SearchModal ({ listingsList, setListingsList }) {
   const handleBedrooms = (event, newValue) => {
     setBedrooms(newValue);
   };
+
+  const setBounds = async() => {
+    const tmpPrice = await getMinMax(listingsList, 'price');
+    const tmpBeds =  await getMinMax(listingsList, 'bedrooms');
+
+    setPriceBounds(tmpPrice);
+    setBedroomsBounds(tmpBeds);
+    // if (price === [0, 100]) {
+    //   console.log('found default filter settings');
+    //   setPrice([Number(tmpPrice.min), Number(tmpPrice.max)]);
+    // }
+    // if (bedrooms === [0, 100]) {
+    //   setBedrooms([Number(tmpBeds.min), Number(tmpBeds.max)]);
+    // }
+  }
 
   const SearchListing = async () => {
     const params = {
@@ -117,6 +195,8 @@ export default function SearchModal ({ listingsList, setListingsList }) {
                     </Grid>
                     <Grid item xs>
                       <Slider
+                        min={Number(priceBounds.min)}
+                        max={Number(priceBounds.max)}
                         value={price}
                         onChange={handlePrice}
                         valueLabelDisplay="auto"
@@ -160,6 +240,8 @@ export default function SearchModal ({ listingsList, setListingsList }) {
                     </Grid>
                     <Grid item xs>
                       <Slider
+                        min={Number(bedroomsBounds.min)}
+                        max={Number(bedroomsBounds.max)}
                         value={bedrooms}
                         onChange={handleBedrooms}
                         valueLabelDisplay="auto"

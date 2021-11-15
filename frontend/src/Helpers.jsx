@@ -1,5 +1,6 @@
 import React from 'react';
 import { Route } from 'react-router';
+import { getReviewRating } from './Components/Rating';
 
 // Function to make api calls
 export const apiFetch = (method, route, TOKEN, body) => {
@@ -191,7 +192,6 @@ export const getListings = async (myListings, listingsList, setListingsList, par
           listingsList.push(listing);
         } else {
           if (filter(details, params)) {
-            console.log(details.title, ' a match');
             listingsList.push(listing);
           }
         }
@@ -199,31 +199,64 @@ export const getListings = async (myListings, listingsList, setListingsList, par
     }
   }
   listingsList.sort(dynamicSort('title'));
-  console.log('listingList', listingsList);
   setListingsList([...listingsList]);
 }
 
 export const filter = (details, params) => {
+  console.log('filtering: ', details.title);
   const search = params.search.toLowerCase();
-  if (details.title.toLowerCase().includes(search)) {
-    return true;
-  }
-  if (details.metadata.type.toLowerCase().includes(search)) {
-    return true;
-  }
-  console.log('ammenities', details.metadata.ammenities);
-  const ammenities = details.metadata.ammenities;
-  for (const item in ammenities) {
-    console.log(ammenities[item]);
-    if (ammenities[item].toLowerCase().includes(search)) {
-      return true;
+  let pass = false;
+  if (search !== '') {
+    if (details.title.toLowerCase().includes(search)) {
+      pass = true;
+    }
+    if (details.metadata.type.toLowerCase().includes(search)) {
+      pass = true;
+    }
+    console.log('ammenities', details.metadata.ammenities);
+    const ammenities = details.metadata.ammenities;
+    for (const item in ammenities) {
+      console.log(ammenities[item]);
+      if (ammenities[item].toLowerCase().includes(search)) {
+        pass = true;
+      }
+    }
+    if (details.address.city.toLowerCase().includes(search)) {
+      pass = true;
+    }
+    if (!pass) {
+      return false;
     }
   }
-  if (details.address.city.toLowerCase().includes(search)) {
-    return true;
+
+  const price = params.price;
+  if (price !== null) {
+    if (!(details.price >= price[0] && details.price <= price[1])) {
+      console.log('does not match price criteria')
+      return false
+    }
   }
-  console.log(details.title, ' not a match');
-  return false;
+
+  const bedrooms = params.bedrooms;
+  const numBedrooms = details.metadata.bedroomsList.length;
+  if (bedrooms !== null) {
+    if (!(numBedrooms >= bedrooms[0] && numBedrooms <= bedrooms[1])) {
+      console.log('does not match bedrooms criteria')
+      return false;
+    }
+  }
+
+  const rating = params.rating;
+  console.log('rating', rating);
+  if (rating !== null) {
+    if (!(getReviewRating(details.reviews) >= rating)) {
+      console.log('does not match review criteria')
+      return false;
+    }
+  }
+
+  console.log(details.title, ' a match');
+  return true;
 }
 
 export const datediff = (first, second) => {

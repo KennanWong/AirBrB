@@ -50,7 +50,7 @@ export const ListingsBar = styled.div`
   display: flex;
   align-items: center;
   gap: 15px;
-  overflow: auto;
+  flex-wrap: wrap;
 `;
 
 export const SpacedFlex = styled.div`

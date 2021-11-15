@@ -18,7 +18,21 @@ Bedrooms.propTypes = {
 const BedroomCardsList = styled.div`
   display: flex;
   gap: 10px;
-  flex-wrap: wrap;
+  overflow: auto;
+  &::-webkit-scrollbar-track {
+    -webkit-appearance: none;
+    box-shadow: nset 0 0 6px grey;
+    border-radius: 5px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: darkBlue;
+    border-radius: 15px;
+    height: 2px;
+  }
+  &::-webkit-scrollbar-thumb:hover {
+    background: lightBlue;
+    max-height: 10px;
+  }
 `;
 
 export function Bedrooms ({ isInput, bedroomNum, listingDetails, setListingDetails }) {

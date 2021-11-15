@@ -24,7 +24,7 @@ export default function Listing ({ publicView, details }) {
     thumbnail: '',
     type: '',
     bathrooms: 0,
-    bedrooms: [],
+    bedroomsList: [],
     reviews: [],
     ammenities: [],
   })
@@ -64,7 +64,7 @@ export default function Listing ({ publicView, details }) {
             <Typography gutterBottom variant="h5" component="div">
               {listingDetails.title}  
             </Typography>
-            <ListingDetailsBar bathroomNum={Number(listingDetails.bathrooms)} bedroomNum={Number(listingDetails.beds)}/> 
+            <ListingDetailsBar bathroomNum={Number(listingDetails.bathrooms)} bedroomNum={Number(listingDetails.bedroomsList.length)}/> 
             <h3>Entire {listingDetails.type}. </h3>
             <h4> ${listingDetails.price} per night.</h4>
             <UserRating readOnly={true} details={listingDetails} setDetails={setListingDetails}/> 

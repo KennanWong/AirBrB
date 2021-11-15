@@ -34,9 +34,9 @@ export default function Listings () {
     console.log(searchString);
     const params = {
       search: searchString,
-      dates: [null, null],
-      price: [null, null],
-      bedrooms: [null, null],
+      dates: null,
+      price: null,
+      bedrooms: null,
       rating: null,
     }
     await getListings(false, listingsList, setListingsList, params);

@@ -11,15 +11,19 @@ import {
   getEmail, sendListingDetails,
 } from '../Helpers'
 
-const getReviewRating = (reviews) => {
+export const getReviewRating = (reviews) => {
   let sum = 0;
   let numReview = 0;
+  let rating = 0;
   for (let i = 0; i < reviews.length; i++) {
     sum += parseFloat(reviews[i].review);
     numReview += 1;
   }
-  const rating = sum / numReview;
-  console.log(rating);
+
+  if (numReview !== 0) {
+    rating = sum / numReview;
+  }
+
   return rating;
 }
 

@@ -3,9 +3,6 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
 // MUI
-import BedroomParentOutlinedIcon from '@mui/icons-material/BedroomParentOutlined';
-import BathroomOutlinedIcon from '@mui/icons-material/BathroomOutlined';
-
 const Bar = styled.div`
   display: flex;
   justify-content: flex-start;
@@ -34,10 +31,18 @@ export default function ListingDetailsBar ({ bedroomNum, bathroomNum }) {
   return (
     <Bar>
       <Item>
-        <BedroomParentOutlinedIcon fontSize={'large'}/> <h4>: {bedroomNum}</h4>
+        <h4>{bedroomNum}</h4>
+        {(bedroomNum === 1)
+          ? <p>Bedroom</p>
+          : <p>Bedrooms</p>
+        }
       </Item>
       <Item>
-        <BathroomOutlinedIcon fontSize={'large'}/> <h4>: {bathroomNum}</h4>
+        <h4>{bathroomNum}</h4>
+        {(bathroomNum === 1)
+          ? <p>Bathroom</p>
+          : <p>Bathrooms</p>
+        }
       </Item>
     </Bar>
   )

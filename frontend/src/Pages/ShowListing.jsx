@@ -79,14 +79,16 @@ export default function ShowListing () {
               <Grid item xs={8}>
                 <List sx={{ width: '90%', bgcolor: 'background.paper' }}>
                   <ListItem>
-                    <ListingDetailsBar bedroomNum={listingDetails.beds} bathroomNum={listingDetails.bathrooms}/>
+                    <ListingDetailsBar bedroomNum={listingDetails.bedroomsList.length} bathroomNum={listingDetails.bathrooms}/>
                   </ListItem>
                   <ListItem>
                     <h2>Entire {listingDetails.type}.</h2>
                   </ListItem>
                   <Divider/>
                   <ListItem>
+                    <br/>
                     <Bedrooms isInput={false} bedroomNum={listingDetails.bedroomsList.length} listingDetails={listingDetails}/>
+                    <br/>
                   </ListItem>
                   <Divider/>
                   <ListItem>
