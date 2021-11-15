@@ -19,11 +19,13 @@ import Select from '@mui/material/Select';
 // import Typography from '@mui/material/Typography';
 
 // MUI icon
+import BedIcon from '@mui/icons-material/Bed';
+import SingleBedIcon from '@mui/icons-material/SingleBed';
 import BedroomParentOutlinedIcon from '@mui/icons-material/BedroomParentOutlined';
 import BedroomChildOutlinedIcon from '@mui/icons-material/BedroomChildOutlined';
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
 
-import { CentredFlex, SpacedFlex } from './Styles';
+import { Flex, SpacedFlex } from './Styles';
 
 Bedroom.propTypes = {
   isInput: PropTypes.bool,
@@ -51,10 +53,7 @@ BedroomInput.propTypes = {
 }
 
 function BedroomInput ({ bedroomNum, listingDetails, setListingDetails }) {
-  const [bed, setBed] = React.useState({
-    numBeds: '',
-    type: '',
-  })
+  const bed = listingDetails.bedroomsList[bedroomNum - 1];
   /*
   const setNumBeds = (value) => {
     const bedroomsList = listingDetails.bedroomsList;
@@ -64,19 +63,27 @@ function BedroomInput ({ bedroomNum, listingDetails, setListingDetails }) {
     for (const room in bedroomsList) {
       sumBeds += Number(bedroomsList[room].numBeds);
     }
-    setListingDetails({ ...listingDetails, bedroomsList: bedroomsList, beds: sumBeds })
+    
   }
   */
   const handleChange = (prop, value) => {
+    const bedroomsList = listingDetails.bedroomsList;
+    let sumBeds = 0;
+    for (const room in bedroomsList) {
+      sumBeds += Number(bedroomsList[room].numBeds);
+    }
+
     if (prop === 'numBeds' && bed.type === '') {
-      setBed({ ...bed, ['numBeds']: value, ['type']: 'Single' });
+      bedroomsList[bedroomNum - 1].numBeds = value;
+      bedroomsList[bedroomNum - 1].type = 'Single';
     }
     else if (prop === 'type' && bed.numBeds === '') {
-      setBed({ ...bed, ['numBeds']: 1, ['type']: value });
+      bedroomsList[bedroomNum - 1].numBeds = 1;
+      bedroomsList[bedroomNum - 1].type = value;
     } else {
-      setBed({ ...bed, [prop]: value });
+      bedroomsList[bedroomNum - 1][prop] = value;
     }
-    
+    setListingDetails({ ...listingDetails, bedroomsList: bedroomsList, beds: sumBeds });
   }
 
   return (
@@ -129,23 +136,45 @@ BedroomDetail.propTypes = {
 }
 
 function BedroomDetail ({ bedroomNum, bedroomDetails }) {
+
   return (
     <Card sx={{ width: 250, height: 200 }}>
       <React.Fragment>
         <CardContent>
-          <CentredFlex>
-            <BedroomParentOutlinedIcon/> Bedroom {bedroomNum}.
-          </CentredFlex>
+          <BedroomIcons bedroomDetails={bedroomDetails}/>
+          Bedroom {bedroomNum}.
           <br/>
           { (bedroomDetails.numBeds === '1')
-            ? <div> {bedroomDetails.numBeds} bed. </div>
-            : <div> {bedroomDetails.numBeds} beds. </div>
+            ? <div> {bedroomDetails.numBeds} {bedroomDetails.type} bed. </div>
+            : <div> {bedroomDetails.numBeds} {bedroomDetails.type} beds. </div>
           }
         </CardContent>
       </React.Fragment>
     </Card>
   )
 }
+
+BedroomIcons.propTypes = {
+  bedroomDetails: PropTypes.object,
+}
+
+function BedroomIcons ({ bedroomDetails }) {
+  const numBeds = [...Array(Number(bedroomDetails.numBeds)).keys()];
+  console.log(numBeds);
+  return (
+    <Flex>
+      {numBeds.map((value, key) => {
+        return <div key={key}>
+          { (bedroomDetails.type === 'Single')
+            ? <SingleBedIcon/>
+            : <BedIcon/>
+          }
+        </div>
+      })}
+    </Flex>
+  )
+}
+
 
 AddBedroom.propTypes = {
   listingDetails: PropTypes.object,
@@ -156,7 +185,7 @@ export function AddBedroom ({ listingDetails, setListingDetails }) {
   const addBedroomFunc = () => {
     console.log('adding a bedroom');
     const bedroomsList = listingDetails.bedroomsList;
-    bedroomsList.push({ numBeds: '' });
+    bedroomsList.push({ numBeds: '', type: ''});
     setListingDetails({ ...listingDetails, bedroomsList: bedroomsList });
   }
   return (

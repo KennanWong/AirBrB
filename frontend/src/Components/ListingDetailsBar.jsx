@@ -34,10 +34,10 @@ export default function ListingDetailsBar ({ bedroomNum, bathroomNum }) {
   return (
     <Bar>
       <Item>
-        <BedroomParentOutlinedIcon/> : {bedroomNum}
+        <BedroomParentOutlinedIcon fontSize={'large'}/> <h4>: {bedroomNum}</h4>
       </Item>
       <Item>
-        <BathroomOutlinedIcon/> : {bathroomNum}
+        <BathroomOutlinedIcon fontSize={'large'}/> <h4>: {bathroomNum}</h4>
       </Item>
     </Bar>
   )

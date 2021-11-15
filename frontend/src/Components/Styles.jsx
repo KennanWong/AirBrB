@@ -43,6 +43,7 @@ export const StyledThumbnail = styled.img`
 export const CentredFlex = styled.div`
   display: flex;
   align-items: center;
+  justify-content: center;
 `;
 
 export const ListingsBar = styled.div`
@@ -55,5 +56,17 @@ export const ListingsBar = styled.div`
 export const SpacedFlex = styled.div`
   display: flex;
   justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+`;
+
+export const BookingsBox = styled.div`
+  border-radius: 15px;
+  border: 3px solid #f7f7f7;
+  padding: 15px;
+`;
+
+export const Flex = styled.div`
+  display: flex;
   gap: 10px;
 `;

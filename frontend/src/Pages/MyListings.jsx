@@ -23,7 +23,7 @@ export default function MyListings () {
   const [listingsList, setListingsList] = React.useState([]);
 
   React.useEffect(() => {
-    getListings(true, listingsList, setListingsList);
+    getListings(true, listingsList, setListingsList, null);
   }, []);
   console.log(listingsList);
   return (

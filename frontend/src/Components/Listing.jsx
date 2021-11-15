@@ -41,10 +41,10 @@ export default function Listing ({ publicView, details }) {
     }
     
   }
-
+  console.log('creating card for ', details.title);
   return (
     <div>
-      <Card sx={{ minWidth: 345 }}>
+      <Card sx={{ minWidth: 345, border: '3px solid #f0f0f0', borderRadius:'15px' }}>
         <CardActionArea onClick={() => navigateTo()}>
           { (listingDetails.thumbnail !== '')
             ? <CardMedia

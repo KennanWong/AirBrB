@@ -137,7 +137,7 @@ export default function CreateListing ({ newListing }) {
       setDetails({ ...details, [prop]: event.target.value });
     }
   };
-  const [toggleUpload, setToggleUpload] = React.useState((details.thumbnail === ''));
+  const [toggleUpload, setToggleUpload] = React.useState((details.thumbnail !== ''));
 
   const navigate = useNavigate();
   console.log(details);

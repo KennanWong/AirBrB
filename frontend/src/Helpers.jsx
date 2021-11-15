@@ -19,8 +19,6 @@ export const apiFetch = (method, route, TOKEN, body) => {
     console.log('empty token');
   }
 
-  console.log('fetching: ', route);
-
   return new Promise((resolve, reject) => {
     fetch(`http://localhost:5005${route}`, requestOptions)
       .then((response) => {
@@ -109,7 +107,7 @@ export const getListingDetails = async (id, listingDetails, setListingDetails) =
   try {
     const ret = await apiFetch('GET', `/listings/${id}`, null, {});
     const listing = ret.listing;
-    console.log('listing deets', listing);
+    // console.log('listing deets', listing);
 
     if (listingDetails != null) {
       setListingDetails({
@@ -127,8 +125,7 @@ export const getListingDetails = async (id, listingDetails, setListingDetails) =
         public: listing.metadata.public,
       })
     }
-    console.log(listing.metadata.public);
-    return listing.metadata.public;
+    return listing;
   } catch (e) {
     alert(e);
   }
@@ -175,10 +172,11 @@ export const sendListingDetails = async (newListing, listingId, details, navigat
   }
 }
 
-export const getListings = async (myListings, listingsList, setListingsList) => {
+export const getListings = async (myListings, listingsList, setListingsList, params) => {
   console.log('Getting listings')
   const ret = await apiFetch('GET', '/listings', null, {});
   const curListings = ret.listings
+  listingsList = [];
   for (const item in curListings) {
     const listing = curListings[item];
     if (myListings) {
@@ -186,12 +184,65 @@ export const getListings = async (myListings, listingsList, setListingsList) => 
         listingsList.push(listing);
       }
     } else {
-      const publicStatus = await getListingDetails(listing.id, null, null);
-      if (publicStatus) {
-        console.log('listing is public');
-        listingsList.push(listing);
+      const details = await getListingDetails(listing.id, null, null);
+      if (details.metadata.public) {
+        if (params === null) {
+          console.log('pushing to list')
+          listingsList.push(listing);
+        } else {
+          if (filter(details, params)) {
+            console.log(details.title, ' a match');
+            listingsList.push(listing);
+          }
+        }
       }
     }
   }
+  listingsList.sort(dynamicSort('title'));
+  console.log('listingList', listingsList);
   setListingsList([...listingsList]);
+}
+
+export const filter = (details, params) => {
+  const search = params.search.toLowerCase();
+  if (details.title.toLowerCase().includes(search)) {
+    return true;
+  }
+  if (details.metadata.type.toLowerCase().includes(search)) {
+    return true;
+  }
+  console.log('ammenities', details.metadata.ammenities);
+  const ammenities = details.metadata.ammenities;
+  for (const item in ammenities) {
+    console.log(ammenities[item]);
+    if (ammenities[item].toLowerCase().includes(search)) {
+      return true;
+    }
+  }
+  if (details.address.city.toLowerCase().includes(search)) {
+    return true;
+  }
+  console.log(details.title, ' not a match');
+  return false;
+}
+
+export const datediff = (first, second) => {
+  // Take the difference between the dates and divide by milliseconds per day.
+  // Round to nearest whole number to deal with DST.
+  return Math.round((second - first) / (1000 * 60 * 60 * 24));
+}
+
+export const dynamicSort = (property) => {
+  let sortOrder = 1;
+  if (property[0] === '-') {
+    sortOrder = -1;
+    property = property.substr(1);
+  }
+  return function (a, b) {
+    /* next line works with strings and numbers,
+      * and you may want to customize it to your needs
+      */
+    const result = (a[property] < b[property]) ? -1 : (a[property] > b[property]) ? 1 : 0;
+    return result * sortOrder;
+  }
 }

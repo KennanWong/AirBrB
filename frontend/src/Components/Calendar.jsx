@@ -5,18 +5,24 @@ import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import Box from '@mui/material/Box';
 
-export default function Calendar () {
-  const [value, setValue] = React.useState([null, null]);
+import PropTypes from 'prop-types';
 
+Calendar.propTypes = {
+  booking: PropTypes.object,
+  handleChange: PropTypes.func,
+}
+
+export default function Calendar ({ booking, handleChange }) {
   return (
     <LocalizationProvider dateAdapter={AdapterDateFns}>
       <DateRangePicker
         startText="Check-in"
         endText="Check-out"
-        value={value}
+        value={booking.dates}
         onChange={(newValue) => {
-          setValue(newValue);
+          handleChange('dates', newValue);
         }}
+        calendars={1}
         renderInput={(startProps, endProps) => (
           <React.Fragment>
             <TextField {...startProps} />
@@ -24,6 +30,7 @@ export default function Calendar () {
             <TextField {...endProps} />
           </React.Fragment>
         )}
+        inputFormat={'dd/MM/yyyy'}
       />
     </LocalizationProvider>
   );
