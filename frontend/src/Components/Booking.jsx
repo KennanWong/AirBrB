@@ -23,7 +23,7 @@ const makeBooking = async (id, booking) => {
 }
 
 export default function Booking ({ id, listingDetails }) {
-  const [booking, setBooking] = React.useState({
+  const [booking, setBooking] = React.useState({ 
     dates: [null, null],
     price: 0,
     numDays: 0,
