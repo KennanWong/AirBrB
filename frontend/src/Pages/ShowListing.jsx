@@ -42,6 +42,7 @@ export default function ShowListing () {
     bedroomsList: [],
     reviews: [],
     ammenities: [],
+    availability: [],
   })
   const params = useParams();
   const id = params.id;
@@ -101,7 +102,7 @@ export default function ShowListing () {
                 </List>
               </Grid>
               <Grid item xs={4}>
-                <Booking id={id} listingDetails={listingDetails}/>
+                <Booking id={id} isInput={false} listingDetails={listingDetails}/>
               </Grid>
             </Grid>
           </Box>

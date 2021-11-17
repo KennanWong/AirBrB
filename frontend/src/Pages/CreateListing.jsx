@@ -25,7 +25,7 @@ import { useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
 import React from 'react';
-import { SpacedFlex, StyledThumbnail, ThumbnailImage } from '../Components/Styles';
+import { CentredFlex, SpacedFlex, StyledThumbnail, ThumbnailImage } from '../Components/Styles';
 import { apiFetch, fileToDataUrl, getListingDetails, getToken, sendListingDetails } from '../Helpers';
 
 import styled from 'styled-components';
@@ -37,6 +37,7 @@ import Ammenities from '../Components/Ammenities';
 import Address from '../Components/Address';
 
 import home from '../Images/home.png';
+import Availability from '../Components/Availability';
 
 const DataEnty = styled.div`
   background-color: #f5f5f5;
@@ -87,7 +88,10 @@ export default function CreateListing ({ newListing }) {
     beds: '',
     bedroomsList: [],
     ammenities: [],
-    public: false,
+    availability:[{
+      dates: [null, null]
+    }],
+    published: false,
   };
 
   const [details, setDetails] = React.useState(defaultState);
@@ -99,14 +103,14 @@ export default function CreateListing ({ newListing }) {
     const params = useParams();
     id = params.id;
     React.useEffect(() => {
+      console.log("fetching details");
       getListingDetails(id, details, setDetails);
     }, []);
   } 
 
   let enableBtn = true;
   for (const item in details) {
-    console.log(item);
-    if (item !== 'address' && item !== 'public') {
+    if (item !== 'address' && item !== 'published' ) {
       if (details[item] === defaultState[item]) {
         console.log(item, ' hasnt changed');
         enableBtn = false;
@@ -122,7 +126,7 @@ export default function CreateListing ({ newListing }) {
     }
   }
 
-  const handleChange = (prop) => (event) => {
+  const handleChange = (prop) => async(event) => {
     if (prop === 'bathrooms' || prop === 'beds') {
       console.log('changing bathrooms');
       if (event.target.value < 0) {
@@ -130,8 +134,18 @@ export default function CreateListing ({ newListing }) {
       } else {
         setDetails({ ...details, [prop]: event.target.value });
       }
-    } else if (prop === 'public') {
+    } else if (prop === 'published') {
       setDetails({ ...details, [prop]: event.target.checked });
+      if (event.target.checked) {
+        console.log("publish listing");
+        const body = {
+          availability: [{}],
+        }
+        await apiFetch('PUT', `/listings/publish/${id}`, getToken(), body);
+      } else {
+        console.log("unpublish listing");
+        await apiFetch('PUT', `/listings/unpublish/${id}`, getToken(), null);
+      } 
     }
     else {
       setDetails({ ...details, [prop]: event.target.value });
@@ -140,7 +154,7 @@ export default function CreateListing ({ newListing }) {
   const [toggleUpload, setToggleUpload] = React.useState((details.thumbnail !== ''));
 
   const navigate = useNavigate();
-  console.log(details);
+  console.log('details: ',details);
   return (
     <div>
       <Container>
@@ -148,7 +162,10 @@ export default function CreateListing ({ newListing }) {
           <Button variant='outlined' startIcon={<DeleteIcon/>}>
             Delete
           </Button>
-          <FormControlLabel control={<Switch checked={details.public} onChange={handleChange('public')}/>} label="Publish Listing" labelPlacement='start'/>
+          {(newListing)
+            ? <FormControlLabel control={<Switch checked={details.published} disabled/>} label="Publish Listing" labelPlacement='start'/>
+            : <FormControlLabel control={<Switch checked={details.published} onChange={handleChange('published')}/>} label="Publish Listing" labelPlacement='start'/>
+          }
         </SpacedFlex>
         <Box sx={{ my: 3, mx: 2 }}>
           <Box sx={{ flexGrow: 1 }}>
@@ -264,6 +281,20 @@ export default function CreateListing ({ newListing }) {
                           type="number"
                         />
                       </FormControl>
+                      <br/>
+                      <br/>
+                      <Divider/>
+                      <br/>
+                      {details.availability.map((value, key) => {
+                        return 
+                          <Availability key={key }index={key} listingDetails={details} setListingDetails={setDetails}/>
+                      })}
+                      <br/>
+                      <Divider/>
+                      <br/>
+                      <CentredFlex>
+                        <Button variant="contained">Add Availability</Button>
+                      </CentredFlex>
                     </DataEnty>
                   </ListItem>
                 </List>

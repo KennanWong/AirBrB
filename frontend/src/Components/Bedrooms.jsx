@@ -19,21 +19,14 @@ const BedroomCardsList = styled.div`
   display: flex;
   gap: 10px;
   overflow: auto;
-  &::-webkit-scrollbar-track {
-    -webkit-appearance: none;
-    box-shadow: nset 0 0 6px grey;
-    border-radius: 5px;
-  }
-  &::-webkit-scrollbar-thumb {
-    background: darkBlue;
-    border-radius: 15px;
-    height: 2px;
-  }
-  &::-webkit-scrollbar-thumb:hover {
-    background: lightBlue;
-    max-height: 10px;
-  }
 `;
+
+const BedroomInputCards = styled.div`
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+`;
+
 
 export function Bedrooms ({ isInput, bedroomNum, listingDetails, setListingDetails }) {
   const numList = [];
@@ -42,16 +35,25 @@ export function Bedrooms ({ isInput, bedroomNum, listingDetails, setListingDetai
   }
 
   return (
-    <BedroomCardsList>
-        {numList.map((value, key) => {
-          return (
-            <Bedroom key={key} isInput={isInput} bedroomNum={value} listingDetails={listingDetails} setListingDetails={setListingDetails}/>
-          )
-        })}
-        { isInput
-          ? <AddBedroom listingDetails={listingDetails} setListingDetails={setListingDetails}/>
-          : <span></span>
-        }
-    </BedroomCardsList>
+    <div>
+      {(isInput)
+        ? <BedroomInputCards>
+            {numList.map((value, key) => {
+              return (
+                <Bedroom key={key} isInput={isInput} bedroomNum={value} listingDetails={listingDetails} setListingDetails={setListingDetails}/>
+              )
+            })}
+            <AddBedroom listingDetails={listingDetails} setListingDetails={setListingDetails}/>
+          </BedroomInputCards>
+        : <BedroomCardsList>
+            {numList.map((value, key) => {
+              return (
+                <Bedroom key={key} isInput={isInput} bedroomNum={value} listingDetails={listingDetails} setListingDetails={setListingDetails}/>
+              )
+            })}
+          </BedroomCardsList>
+      }
+    </div>
+    
   )
 }

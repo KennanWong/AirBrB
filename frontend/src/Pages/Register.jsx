@@ -16,11 +16,11 @@ import {
   WrappedContainer
 } from '../Components/Styles';
 import PasswordInput from '../Components/PasswordInput';
-import { apiFetch, setFieldInState, setToken } from '../Helpers';
+import { apiFetch, setFieldInState, setToken, setEmail } from '../Helpers';
 
 export default function Register ({ setActiveUser }) {
   const [name, setName] = React.useState('');
-  const [email, setEmail] = React.useState('');
+  const [email, setRegEmail] = React.useState('');
 
   const [passwordField, setPasswordField] = React.useState({
     password: '',
@@ -140,7 +140,7 @@ export default function Register ({ setActiveUser }) {
                 errorMsg={errorMsg.email}
                 resetError={resetError}
                 label='Email'
-                setState={setEmail}/>
+                setState={setRegEmail}/>
               <PasswordInput
                 errorStatus={errorStatus.password}
                 errorMsg={errorMsg.password}

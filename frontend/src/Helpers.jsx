@@ -10,7 +10,7 @@ export const apiFetch = (method, route, TOKEN, body) => {
     body: null,
   };
 
-  if (method !== 'GET') {
+  if (method !== 'GET' && body !== null) {
     requestOptions.body = JSON.stringify(body);
   }
 
@@ -30,7 +30,9 @@ export const apiFetch = (method, route, TOKEN, body) => {
             });
             break;
           case 400:
+            console.log('responseError', response);
             response.json().then((data) => {
+              console.log(data.error);
               reject(data.error);
             });
             break;
@@ -108,7 +110,7 @@ export const getListingDetails = async (id, listingDetails, setListingDetails) =
   try {
     const ret = await apiFetch('GET', `/listings/${id}`, null, {});
     const listing = ret.listing;
-    // console.log('listing deets', listing);
+    console.log('listing deets', listing);
 
     if (listingDetails != null) {
       setListingDetails({
@@ -123,7 +125,8 @@ export const getListingDetails = async (id, listingDetails, setListingDetails) =
         bedroomsList: listing.metadata.bedroomsList,
         reviews: listing.reviews,
         ammenities: listing.metadata.ammenities,
-        public: listing.metadata.public,
+        published: listing.published,
+        availability: listing.availability,
       })
     }
     return listing;
@@ -181,12 +184,13 @@ export const getListings = async (myListings, listingsList, setListingsList, par
   for (const item in curListings) {
     const listing = curListings[item];
     if (myListings) {
+      console.log(listing);
       if (listing.owner === getEmail()) {
         listingsList.push(listing);
       }
     } else {
       const details = await getListingDetails(listing.id, null, null);
-      if (details.metadata.public) {
+      if (details.published) {
         if (params === null) {
           console.log('pushing to list')
           listingsList.push(listing);
