@@ -35,25 +35,29 @@ export function Bedrooms ({ isInput, bedroomNum, listingDetails, setListingDetai
   }
 
   return (
-    <div>
-      {(isInput)
-        ? <BedroomInputCards>
-            {numList.map((value, key) => {
-              return (
-                <Bedroom key={key} isInput={isInput} bedroomNum={value} listingDetails={listingDetails} setListingDetails={setListingDetails}/>
-              )
-            })}
-            <AddBedroom listingDetails={listingDetails} setListingDetails={setListingDetails}/>
-          </BedroomInputCards>
-        : <BedroomCardsList>
-            {numList.map((value, key) => {
-              return (
-                <Bedroom key={key} isInput={isInput} bedroomNum={value} listingDetails={listingDetails} setListingDetails={setListingDetails}/>
-              )
-            })}
-          </BedroomCardsList>
+    <BedroomCardsList>
+      {numList.map((value, key) => {
+        return (
+          <Bedroom key={key} isInput={isInput} bedroomNum={value} listingDetails={listingDetails} setListingDetails={setListingDetails}/>
+        )
+      })}
+      {(!isInput)
+        ? <div></div>
+        : <AddBedroom listingDetails={listingDetails} setListingDetails={setListingDetails}/>
       }
-    </div>
+    </BedroomCardsList>
+    // <Bed>
+    //   <br/>
+    //   <BedroomCardsList>
+    //         {numList.map((value, key) => {
+    //           return (
+    //             <Bedroom key={key} isInput={isInput} bedroomNum={value} listingDetails={listingDetails} setListingDetails={setListingDetails}/>
+    //           )
+    //         })}
+    //       </BedroomCardsList>
+    //   }
+    //   <br/>
+    // </div>
     
   )
 }

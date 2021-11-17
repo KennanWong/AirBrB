@@ -21,12 +21,16 @@ export default function Calendar ({ isInput, booking, listingDetails, handleChan
       return false;
     }
     if (listingDetails !== null) {
-      const availability = listingDetails.availability;
-      console.log(availability);
-      for (let i = 0; i < availability.length; i++) {
-        const reservation = availability[i];
-        const dates = reservation.dateRange.dates;
-        if (!(date >= dates[0] && date <= dates[1])) {
+      const availabilityList = listingDetails.availability;
+      console.log(availabilityList);
+      for (let i = 0; i < availabilityList.length; i++) {
+        const availability = availabilityList[i];
+        const dates = availability.dates;
+        const from = new Date(dates[0]);
+        const to = new Date(dates[1])
+        if (!(date >= from && date <= to)) {
+          console.log('Date not within range');
+          console.log(from, 'vs', date, 'vs', to);
           return true;
         }
       }

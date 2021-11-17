@@ -139,8 +139,8 @@ export default function CreateListing ({ newListing }) {
       if (event.target.checked) {
         const availabilities = details.availability;
         console.log('Availabilities: ', availabilities);
-        console.log(availabilities[0].dates);
-        if (availabilities[0].dates[0] !== null && availabilities[1].dates[1] !== null) {
+        console.log(availabilities[0].dates[0]);
+        if (availabilities[0].dates[0] !== null && availabilities[0].dates[1] !== null) {
           const body = {
             availability: details.availability,
           }
@@ -299,19 +299,24 @@ export default function CreateListing ({ newListing }) {
                           type="number"
                         />
                       </FormControl>
-                      <br/>
-                      <br/>
-                      <Divider/>
-                      <br/>
-                      {details.availability.map((value, key) => {
-                        return <Availability key={key }index={key} listingDetails={details} setListingDetails={setDetails}/>
-                      })}
-                      <br/>
-                      <Divider/>
-                      <br/>
-                      <CentredFlex>
-                        <Button variant="contained" onClick={() => addAvailability()}>Add Availability</Button>
-                      </CentredFlex>
+                      {(!newListing)
+                        ? <div>
+                            <br/>
+                            <br/>
+                            <Divider/>
+                            <br/>
+                            {details.availability.map((value, key) => {
+                              return <Availability key={key }index={key} listingDetails={details} setListingDetails={setDetails}/>
+                            })}
+                            <br/>
+                            <Divider/>
+                            <br/>
+                            <CentredFlex>
+                              <Button variant="contained" onClick={() => addAvailability()}>Add Availability</Button>
+                            </CentredFlex>
+                          </div>
+                        : <div></div>
+                      }
                     </DataEnty>
                   </ListItem>
                 </List>
