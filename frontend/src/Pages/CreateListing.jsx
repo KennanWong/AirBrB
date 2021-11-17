@@ -137,11 +137,20 @@ export default function CreateListing ({ newListing }) {
     } else if (prop === 'published') {
       setDetails({ ...details, [prop]: event.target.checked });
       if (event.target.checked) {
-        console.log("publish listing");
-        const body = {
-          availability: [{}],
+        const availabilities = details.availability;
+        console.log('Availabilities: ', availabilities);
+        console.log(availabilities[0].dates);
+        if (availabilities[0].dates[0] !== null && availabilities[1].dates[1] !== null) {
+          const body = {
+            availability: details.availability,
+          }
+          await apiFetch('PUT', `/listings/publish/${id}`, getToken(), body);
+        } else {
+          alert('Please provide availabilities before publishing');
+          setDetails({ ...details, [prop]: !event.target.checked });
+          return;
         }
-        await apiFetch('PUT', `/listings/publish/${id}`, getToken(), body);
+        
       } else {
         console.log("unpublish listing");
         await apiFetch('PUT', `/listings/unpublish/${id}`, getToken(), null);
@@ -152,6 +161,15 @@ export default function CreateListing ({ newListing }) {
     }
   };
   const [toggleUpload, setToggleUpload] = React.useState((details.thumbnail !== ''));
+
+  const addAvailability= () => {
+    const availabilityList = details.availability;
+    const newAvailability = {
+      dates: [null, null]
+    }
+    availabilityList.push(newAvailability);
+    setDetails({ ...details, availability: availabilityList });
+  }
 
   const navigate = useNavigate();
   console.log('details: ',details);
@@ -286,14 +304,13 @@ export default function CreateListing ({ newListing }) {
                       <Divider/>
                       <br/>
                       {details.availability.map((value, key) => {
-                        return 
-                          <Availability key={key }index={key} listingDetails={details} setListingDetails={setDetails}/>
+                        return <Availability key={key }index={key} listingDetails={details} setListingDetails={setDetails}/>
                       })}
                       <br/>
                       <Divider/>
                       <br/>
                       <CentredFlex>
-                        <Button variant="contained">Add Availability</Button>
+                        <Button variant="contained" onClick={() => addAvailability()}>Add Availability</Button>
                       </CentredFlex>
                     </DataEnty>
                   </ListItem>

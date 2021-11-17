@@ -22,6 +22,7 @@ export default function Calendar ({ isInput, booking, listingDetails, handleChan
     }
     if (listingDetails !== null) {
       const availability = listingDetails.availability;
+      console.log(availability);
       for (let i = 0; i < availability.length; i++) {
         const reservation = availability[i];
         const dates = reservation.dateRange.dates;
