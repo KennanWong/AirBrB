@@ -46,6 +46,11 @@ const DataEnty = styled.div`
   width: 100%;
 `;
 
+const onDelete = async (id, navigate) => {
+  await apiFetch('DELETE', `/listings/${id}`, getToken(), {});
+  navigate('/myListings');
+}
+
 NumberOptions.propTypes = {
   num: PropTypes.number,
 }
@@ -168,7 +173,12 @@ export default function CreateListing ({ newListing }) {
     <div>
       <Container>
         <SpacedFlex>
-          <Button variant='outlined' startIcon={<DeleteIcon/>}>
+          <Button
+            variant='outlined'
+            startIcon={<DeleteIcon/>}
+            disabled={newListing}
+            onClick={() => onDelete(details.id, navigate)}
+          >
             Delete
           </Button>
           <FormControlLabel
