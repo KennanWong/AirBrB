@@ -118,7 +118,7 @@ export const getListingDetails = async (id, listingDetails, setListingDetails) =
       console.log(tmp);
       for (let i = 0; i < tmp.length; i++) {
         console.log(tmp[i].listingId, 'vs', id);
-        if (Number(tmp[i].listingId) === id) {
+        if (Number(tmp[i].listingId) === Number(id)) {
           bookings.push(tmp[i]);
           console.log(bookings);
         } else {
@@ -143,6 +143,7 @@ export const getListingDetails = async (id, listingDetails, setListingDetails) =
         published: listing.published,
         availability: listing.availability,
         bookings: bookings,
+        postedOn: listing.postedOn,
       })
     }
     return listing;
@@ -226,6 +227,8 @@ export const filter = (details, params) => {
   console.log('filtering: ', details.title);
   const search = params.search.toLowerCase();
   let pass = false;
+
+  // Check search param
   if (search !== '') {
     if (details.title.toLowerCase().includes(search)) {
       pass = true;
@@ -249,6 +252,7 @@ export const filter = (details, params) => {
     }
   }
 
+  // Check price param
   const price = params.price;
   if (price !== null) {
     if (!(details.price >= price[0] && details.price <= price[1])) {
@@ -257,6 +261,7 @@ export const filter = (details, params) => {
     }
   }
 
+  // Check bedroom param
   const bedrooms = params.bedrooms;
   const numBedrooms = details.metadata.bedroomsList.length;
   if (bedrooms !== null) {
@@ -266,12 +271,23 @@ export const filter = (details, params) => {
     }
   }
 
+  // Check rating param
   const rating = params.rating;
   console.log('rating', rating);
   if (rating !== null) {
     if (!(getReviewRating(details.reviews) >= rating)) {
       console.log('does not match review criteria')
       return false;
+    }
+  }
+
+  // Check date param
+  const dates = params.dates;
+  if (dates[0] !== null && dates[1] !== null) {
+    for (const availability in details.availability) {
+      if (!(dates[0] >= availability[0] && dates[1] <= availability[1])) {
+        return false;
+      }
     }
   }
 
@@ -302,15 +318,16 @@ export const dynamicSort = (property) => {
 
 export const getUserBooking = (listingDetails) => {
   const bookings = listingDetails.bookings;
-  let userBooking = null;
+  const userBooking = [];
+  console.log('bookings: ', bookings);
   if (bookings !== null) {
     for (let i = 0; i < bookings.length; i++) {
+      console.log(bookings[i]);
       if (bookings[i].owner === getEmail()) {
-        userBooking = bookings[i];
-        console.log(userBooking);
-        break;
+        userBooking.push(bookings[i]);
       }
     }
   }
+  console.log('userBookings', userBooking);
   return userBooking;
 }

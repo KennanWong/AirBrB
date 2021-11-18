@@ -75,12 +75,15 @@ export default function UserRating ({ listingId, readOnly, details, setDetails }
 
   let canMakeReview = false;
   if (getEmail() !== null) {
-    const booking = getUserBooking(details);
-    if (booking !== null) {
-      if (booking.status === 'accepted') {
-        canMakeReview = true;
-      } 
+    const bookings = getUserBooking(details);
+    if (bookings.length !== 0) {
+      for (let i = 0; i < bookings.length; i++) {
+        if (bookings[i].status === 'accepted') {
+          canMakeReview = true;
+        } 
+      }
     }
+
   }
 
   return (

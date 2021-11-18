@@ -98,7 +98,6 @@ function Header ({ activeUser, setActiveUser }) {
                 <MenuItem onClick={handleClose}>
                   <Link to='/mylistings'>My Listings</Link>
                 </MenuItem>
-                <MenuItem onClick={handleClose}><Link to='/manageBookings'>Manage Bookings</Link></MenuItem>
                 <MenuItem onClick={(e) => logoutFn(navigate)}>Logout</MenuItem>
               </div>
             : <div>

@@ -26,11 +26,12 @@ Review.propTypes = {
   setListingDetails: PropTypes.func,
 }
 
-const submitReview = async (userReview, listingDetails, setListingDetails) => {
+const submitReview = async (userReview, listingDetails, setListingDetails, setUserReview) => {
   const body = {
     review: userReview,
   }
   await apiFetch('PUT', `/listings/${listingDetails.id}/review/${userReview.bookingId}`, getToken(), body);
+  setUserReview({ ...userReview, rating: 0, comment: '' })
   getListingDetails(listingDetails.id, listingDetails, setListingDetails);
 }
 
@@ -43,9 +44,9 @@ export default function Review ({ isInput, review, listingDetails, setListingDet
   });
 
   React.useEffect(() => {
-    const booking = getUserBooking(listingDetails);
-    if (booking !== null) {
-      setUserReview({ ...userReview, email: getEmail(), bookingId: booking.id })
+    const bookings = getUserBooking(listingDetails);
+    if (bookings.length !== 0) {
+      setUserReview({ ...userReview, email: getEmail(), bookingId: bookings[0].id })
     }
   }, []);
 
@@ -75,7 +76,7 @@ export default function Review ({ isInput, review, listingDetails, setListingDet
               }}
               precision={0.5}
             />
-            <Button variant={'contained'} onClick={() => submitReview(userReview, listingDetails, setListingDetails)}>Submit Review</Button>
+            <Button variant={'contained'} onClick={() => submitReview(userReview, listingDetails, setListingDetails, setUserReview)}>Submit Review</Button>
           </Stack>
         : <Stack spacing={2}>
             <Typography variant="h6" gutterBottom component="div"> {review.email} - Booking#: {review.bookingId}</Typography>

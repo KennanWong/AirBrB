@@ -45,15 +45,17 @@ export default function Calendar ({ isInput, booking, listingDetails, handleChan
       // const safe = checkPreviousBookings(date);
       const id = listingDetails.id;
       const bookings = listingDetails.bookings;
-      const userBooking = getUserBooking(listingDetails);
+      const userBookings = getUserBooking(listingDetails);
       for (let i = 0; i < bookings.length; i++) {
         const booking = bookings[i];
-        if (booking !== userBooking && booking.status === 'accepted') {
-          const dates = booking.dateRange.dates;
-          from = new Date(dates[0]);
-          to = new Date(dates[1]);
-          if (date > from && date < to) {
-            return true;
+        for (let j = 0; j < userBookings.length; j++) {
+          if (booking !== userBookings[j] && booking.status === 'accepted') {
+            const dates = booking.dateRange.dates;
+            from = new Date(dates[0]);
+            to = new Date(dates[1]);
+            if (date >= from && date < to) {
+              return true;
+            }
           }
         }
       }

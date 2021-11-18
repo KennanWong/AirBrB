@@ -1,19 +1,23 @@
 import React from 'react';
 
 import Box from '@mui/material/Box';
-import { Container, Divider } from '@mui/material';
+import { Container, Divider, List, ListItem } from '@mui/material';
+import Typography from '@mui/material/Typography';
 
 import {
+  Flex,
   SpacedFlex
 } from '../Components/Styles';
-import { getListingDetails } from '../Helpers';
+import { datediff, getListingDetails } from '../Helpers';
 import { useParams } from 'react-router';
+import Booking from '../Components/Booking';
 
 export default function ManageBookings () {
   const params = useParams();
   const id = params.id;
 
   const [listingDetails, setListingDetails] = React.useState({
+    title: '',
     id: '',
     bookings: [],
   })
@@ -22,20 +26,83 @@ export default function ManageBookings () {
     getListingDetails(Number(id), listingDetails, setListingDetails);
   }, [])
 
-  console.log(listingDetails);
+  const [bookingsList, setBookingsList] = React.useState({
+    pending: [],
+    history: [],
+    liveDays: 0,
+    daysBooked: 0,
+    profit: 0,
+  })
+
+  React.useEffect(() => {
+    console.log(listingDetails)
+    const bookings = listingDetails.bookings;
+    const historyTmp = [];
+    const pendingTmp = [];
+    let liveDays = 0;
+    let daysBooked = 0;
+    let profit = 0;
+    for (let i = 0; i < bookings.length; i++) {
+      if (bookings[i].status === 'pending') {
+        pendingTmp.push(bookings[i]);
+      } else {
+        historyTmp.push(bookings[i]);
+        daysBooked += bookings[i].dateRange.numDays;
+      }
+      profit += bookings[i].totalPrice;
+    }
+    liveDays = datediff(new Date(listingDetails.postedOn), new Date());
+    setBookingsList({ pending: pendingTmp, history: historyTmp, liveDays: liveDays, daysBooked: daysBooked, profit: profit })
+  }, [listingDetails])
+
   return (
     <Container>
       <SpacedFlex>
-        <h1>Manage Bookings</h1>
+        <h1>Manage {listingDetails.title} Bookings</h1>
       </SpacedFlex>
+      <Flex>
+        <Typography sx={{ mt: 4, mb: 2 }} variant="body1" component="div">
+          Listing live for: {bookingsList.liveDays} days.
+        </Typography>
+        <Typography sx={{ mt: 4, mb: 2 }} variant="body1" component="div">
+          Days booked: {bookingsList.daysBooked} days.
+        </Typography>
+        <Typography sx={{ mt: 4, mb: 2 }} variant="body1" component="div">
+          Profit: ${bookingsList.profit}
+        </Typography>
+      </Flex>
       <Divider/>
       <br/>
       <Box sx={{ flexGrow: 1 }}>
-
+        <Typography sx={{ mt: 4, mb: 2 }} variant="h5" component="div">
+          Pending Bookings
+        </Typography>
+        <Divider/>
+        <List>
+          {bookingsList.pending.map((value, key) => {
+            return (
+              <ListItem key={key}>
+                <Booking booking={value} isInput={true} listingDetails={listingDetails} setListingDetails={setListingDetails}/>
+              </ListItem>
+            )
+          })}
+        </List>
       </Box>
-      <br/>
-      <Divider/>
-      <br/>
+      <Box sx={{ flexGrow: 1 }}>
+        <Typography sx={{ mt: 4, mb: 2 }} variant="h5" component="div">
+          Booking History
+        </Typography>
+        <Divider/>
+        <List>
+          {bookingsList.history.map((value, key) => {
+            return (
+              <ListItem key={key}>
+                <Booking booking={value} isInput={false} listingDetails={listingDetails} setListingDetails={setListingDetails}/>
+              </ListItem>
+            )
+          })}
+        </List>
+      </Box>
     </Container>
   )
 }
