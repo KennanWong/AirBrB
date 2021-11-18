@@ -1,5 +1,3 @@
-/* eslint-disable */ 
-
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import Rating from '@mui/material/Rating';
@@ -8,7 +6,7 @@ import Typography from '@mui/material/Typography';
 import PropTypes from 'prop-types'
 
 import {
-  getEmail, getUserBooking, sendListingDetails,
+  getEmail, getUserBooking,
 } from '../Helpers'
 import { List, ListItem } from '@mui/material';
 import Review from './Review';
@@ -29,36 +27,8 @@ export const getReviewRating = (reviews) => {
   return rating;
 }
 
-const addReview = (listingId, value, details, setDetails) => {
-  const reviews = details.reviews;
-  for (let i = 0; i < reviews.length; i++) {
-    if (reviews[i].email === getEmail()) {
-      if (value != null) {
-        reviews[i].review = value;
-      } else {
-        reviews.splice(i, 1);
-      }
-      setDetails({...details, reviews: reviews});
-      sendListingDetails(false, listingId, details, null);
-      return;
-    }
-  }
-  if (getEmail() !== null) {
-    const newReview = {
-      email: getEmail(),
-      review: value,
-    }
-    reviews.push(newReview);
-    setDetails({...details, reviews: reviews});
-    sendListingDetails(false, listingId, details, null);
-  } else {
-    alert('Login to leave a review');
-  }
-  
-}
-
-
 UserRating.propTypes = {
+  listingId: PropTypes.number,
   readOnly: PropTypes.bool,
   details: PropTypes.object,
   setDetails: PropTypes.func,
@@ -80,10 +50,9 @@ export default function UserRating ({ listingId, readOnly, details, setDetails }
       for (let i = 0; i < bookings.length; i++) {
         if (bookings[i].status === 'accepted') {
           canMakeReview = true;
-        } 
+        }
       }
     }
-
   }
 
   return (
@@ -102,9 +71,9 @@ export default function UserRating ({ listingId, readOnly, details, setDetails }
               : <div></div>
             }
             {details.reviews.map((value, key) => {
-              return  <ListItem key={key}>
-                        <Review isInput={false} review={value} listingDetails={details} setListingDetails={setDetails}/>
-                      </ListItem>
+              return <ListItem key={key}>
+                      <Review isInput={false} review={value} listingDetails={details} setListingDetails={setDetails}/>
+                    </ListItem>
             })}
           </List>
         : <div></div>

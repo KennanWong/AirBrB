@@ -1,12 +1,9 @@
-/* eslint-disable */
-
 import * as React from 'react';
 import Backdrop from '@mui/material/Backdrop';
 import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
 import Fade from '@mui/material/Fade';
 import Grid from '@mui/material/Grid';
-// import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import { Button, Divider, IconButton } from '@mui/material';
 import Slider from '@mui/material/Slider';
@@ -62,8 +59,8 @@ const getMinMax = async (listingsList, param) => {
     details = await getListingDetails(listingsList[0].id, null, null);
     min = details.metadata.bedroomsList.length;
     max = min;
-  } 
-  
+  }
+
   for (let i = 1; i < listingsList.length; i++) {
     let val;
     if (param === 'price') {
@@ -98,7 +95,6 @@ export default function SearchModal ({ setListingsList }) {
   };
   const handleClose = () => setOpen(false);
 
-
   const [priceBounds, setPriceBounds] = React.useState({
     min: 0,
     max: 100,
@@ -108,7 +104,7 @@ export default function SearchModal ({ setListingsList }) {
     min: 0,
     max: 100,
   });
-  
+
   React.useEffect(async () => {
     await getListings(false, listingsList, setListings, null);
   }, []);
@@ -126,9 +122,9 @@ export default function SearchModal ({ setListingsList }) {
     setBedrooms(newValue);
   };
 
-  const setBounds = async() => {
+  const setBounds = async () => {
     const tmpPrice = await getMinMax(listingsList, 'price');
-    const tmpBeds =  await getMinMax(listingsList, 'bedrooms');
+    const tmpBeds = await getMinMax(listingsList, 'bedrooms');
 
     setPriceBounds(tmpPrice);
     setBedroomsBounds(tmpBeds);
@@ -150,7 +146,7 @@ export default function SearchModal ({ setListingsList }) {
       rating: rating,
     }
     await setListingsList([]);
-    await getListings (false, listingsList, setListingsList, params);
+    await getListings(false, listingsList, setListingsList, params);
     handleClose();
   }
 

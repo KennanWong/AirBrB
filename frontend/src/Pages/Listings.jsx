@@ -1,14 +1,12 @@
-/* eslint-disable */
 import React from 'react';
 
 import Box from '@mui/material/Box';
 import { Container, Divider } from '@mui/material';
-import TextField from '@mui/material/TextField';
 import Paper from '@mui/material/Paper';
 import InputBase from '@mui/material/InputBase';
 import IconButton from '@mui/material/IconButton';
 
-import SearchIcon from '@mui/icons-material/Search';  
+import SearchIcon from '@mui/icons-material/Search';
 
 import {
   getListings,
@@ -28,7 +26,7 @@ export default function Listings () {
     await getListings(false, listingsList, setListingsList, null);
     console.log('getting listings list');
   }, []);
-  
+
   const search = async () => {
     await setListingsList([]);
     console.log(searchString);
@@ -42,7 +40,6 @@ export default function Listings () {
     await getListings(false, listingsList, setListingsList, params);
     // setSearchString(searchString);
   }
-  console.log('listingsListNow',listingsList);
   return (
     <Container>
       <SpacedFlex>

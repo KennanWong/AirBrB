@@ -1,4 +1,3 @@
-/* eslint-disable */
 import React from 'react';
 import Button from '@mui/material/Button';
 import Accordion from '@mui/material/Accordion';
@@ -8,8 +7,9 @@ import AccordionDetails from '@mui/material/AccordionDetails';
 
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
-import { apiFetch, datediff, getEmail, getListingDetails, getToken, getUserBooking } from '../Helpers';
+import PropTypes from 'prop-types';
 
+import { apiFetch, datediff, getListingDetails, getToken, getUserBooking } from '../Helpers';
 import Calendar from './Calendar'
 import { BookingsBox, CentredFlex } from './Styles';
 import Booking from './Booking';
@@ -23,7 +23,7 @@ const makeBooking = async (id, booking, setBooking, listingDetails, setListingDe
     totalPrice: booking.price,
   }
 
-  const bookingID = await apiFetch('POST', `/bookings/new/${id}`, getToken(), body);
+  await apiFetch('POST', `/bookings/new/${id}`, getToken(), body);
 
   alert('Succesfully made a booking');
   setBooking({
@@ -34,8 +34,14 @@ const makeBooking = async (id, booking, setBooking, listingDetails, setListingDe
   await getListingDetails(id, listingDetails, setListingDetails);
 }
 
+MakeBooking.propTypes = {
+  id: PropTypes.number,
+  listingDetails: PropTypes.object,
+  setListingDetails: PropTypes.func,
+}
+
 export default function MakeBooking ({ id, listingDetails, setListingDetails }) {
-  const [booking, setBooking] = React.useState({ 
+  const [booking, setBooking] = React.useState({
     dates: [null, null],
     price: 0,
     numDays: 0,
@@ -57,14 +63,9 @@ export default function MakeBooking ({ id, listingDetails, setListingDetails }) 
       numDays = datediff(tmp[0], tmp[1]) + 1;
       console.log('numDays', numDays);
     }
-    setBooking({ ...booking, [prop]:tmp, numDays: numDays, price: listingDetails.price * numDays});
+    setBooking({ ...booking, [prop]: tmp, numDays: numDays, price: listingDetails.price * numDays });
   }
-  
-  let canMakeBooking = false;
-  if (getToken() !== null) {
-    canMakeBooking = true;
-  }
-  
+
   return (
     <BookingsBox>
       {(booking.numDays !== 0)
@@ -108,7 +109,7 @@ export default function MakeBooking ({ id, listingDetails, setListingDetails }) 
   )
 }
 
-function SubmitButton({ id, booking, setBooking, listingDetails, setListingDetails }) {
+function SubmitButton ({ id, booking, setBooking, listingDetails, setListingDetails }) {
   if (getToken() === null) {
     return (
       <Button variant="contained" disabled fullWidth> Login to make a booking </Button>

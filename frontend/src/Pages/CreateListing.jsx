@@ -1,4 +1,3 @@
-/* eslint-disable */ 
 import Button from '@mui/material/Button';
 import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
@@ -66,11 +65,9 @@ export function NumberOptions ({ num }) {
 
 CreateListing.propTypes = {
   newListing: PropTypes.bool,
-  listingId: PropTypes.number,
 }
 
 export default function CreateListing ({ newListing }) {
-
   const defaultState = {
     title: '',
     address: {
@@ -88,7 +85,7 @@ export default function CreateListing ({ newListing }) {
     beds: '',
     bedroomsList: [],
     ammenities: [],
-    availability:[],
+    availability: [],
     published: false,
   };
 
@@ -101,14 +98,13 @@ export default function CreateListing ({ newListing }) {
     const params = useParams();
     id = params.id;
     React.useEffect(() => {
-      console.log("fetching details");
       getListingDetails(id, details, setDetails);
     }, []);
-  } 
+  }
 
   let enableBtn = true;
   for (const item in details) {
-    if (item !== 'address' && item !== 'published' ) {
+    if (item !== 'address' && item !== 'published') {
       if (details[item] === defaultState[item]) {
         console.log(item, ' hasnt changed');
         enableBtn = false;
@@ -124,7 +120,7 @@ export default function CreateListing ({ newListing }) {
     }
   }
 
-  const handleChange = (prop) => async(event) => {
+  const handleChange = (prop) => async (event) => {
     if (prop === 'bathrooms' || prop === 'beds') {
       console.log('changing bathrooms');
       if (event.target.value < 0) {
@@ -145,15 +141,11 @@ export default function CreateListing ({ newListing }) {
         } else {
           alert('Please provide availabilities before publishing');
           setDetails({ ...details, [prop]: !event.target.checked });
-          return;
         }
-        
       } else {
-        console.log("unpublish listing");
         await apiFetch('PUT', `/listings/unpublish/${id}`, getToken(), null);
-      } 
-    }
-    else {
+      }
+    } else {
       setDetails({ ...details, [prop]: event.target.value });
     }
   };
@@ -172,7 +164,6 @@ export default function CreateListing ({ newListing }) {
   }
 
   const navigate = useNavigate();
-  console.log('details: ',details);
   return (
     <div>
       <Container>
@@ -304,11 +295,11 @@ export default function CreateListing ({ newListing }) {
                             <br/>
                             <Divider/>
                             <br/>
-                            <List sx={{padding: '0px'}}>
+                            <List sx={{ padding: '0px' }}>
                             {details.availability.map((value, key) => {
-                              return  <ListItem key={key}>
+                              return <ListItem key={key}>
                                         <div>
-                                          <Availability  index={key} listingDetails={details} setListingDetails={setDetails} published={details.published}/>
+                                          <Availability index={key} listingDetails={details} setListingDetails={setDetails} published={details.published}/>
                                           {(details.published)
                                             ? <div></div>
                                             : <CentredFlex>
@@ -335,7 +326,6 @@ export default function CreateListing ({ newListing }) {
                           </div>
                         : <div></div>
                       }
-                      
                     </DataEnty>
                   </ListItem>
                 </List>

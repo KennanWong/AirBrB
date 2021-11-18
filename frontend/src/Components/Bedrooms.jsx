@@ -1,12 +1,11 @@
-/* eslint-disable */
 import React from 'react';
 
 import PropTypes from 'prop-types';
 import {
   Bedroom,
   AddBedroom,
-}  from './Bedroom.jsx';
-import  styled  from 'styled-components';
+} from './Bedroom.jsx';
+import styled from 'styled-components';
 
 Bedrooms.propTypes = {
   isInput: PropTypes.bool,
@@ -21,13 +20,6 @@ const BedroomCardsList = styled.div`
   overflow: auto;
   flex-wrap: wrap;
 `;
-
-const BedroomInputCards = styled.div`
-  display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
-`;
-
 
 export function Bedrooms ({ isInput, bedroomNum, listingDetails, setListingDetails }) {
   const numList = [];
@@ -47,18 +39,5 @@ export function Bedrooms ({ isInput, bedroomNum, listingDetails, setListingDetai
         : <AddBedroom listingDetails={listingDetails} setListingDetails={setListingDetails}/>
       }
     </BedroomCardsList>
-    // <Bed>
-    //   <br/>
-    //   <BedroomCardsList>
-    //         {numList.map((value, key) => {
-    //           return (
-    //             <Bedroom key={key} isInput={isInput} bedroomNum={value} listingDetails={listingDetails} setListingDetails={setListingDetails}/>
-    //           )
-    //         })}
-    //       </BedroomCardsList>
-    //   }
-    //   <br/>
-    // </div>
-    
   )
 }

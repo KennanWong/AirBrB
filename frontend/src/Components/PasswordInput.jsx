@@ -1,4 +1,3 @@
-/* eslint-disable react/prop-types */
 import React from 'react';
 
 // import TextField from '@mui/material/TextField';
@@ -10,6 +9,17 @@ import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import IconButton from '@mui/material/IconButton';
 import { FormHelperText } from '@mui/material';
+
+import PropTypes from 'prop-types';
+
+PasswordInput.propTypes = {
+  errorStatus: PropTypes.bool,
+  errorMsg: PropTypes.string,
+  resetError: PropTypes.func,
+  label: PropTypes.string,
+  passwordField: PropTypes.object,
+  setState: PropTypes.func,
+}
 
 export default function PasswordInput ({ errorStatus, errorMsg, resetError, label, passwordField, setState }) {
   const handleClickShowPassword = () => {

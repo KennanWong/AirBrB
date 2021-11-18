@@ -3,22 +3,20 @@ import TextField from '@mui/material/TextField';
 import DateRangePicker from '@mui/lab/DateRangePicker';
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import LocalizationProvider from '@mui/lab/LocalizationProvider';
-/* eslint-disable*/
 import Box from '@mui/material/Box';
 
 import PropTypes from 'prop-types';
-import { apiFetch, getToken, getUserBooking } from '../Helpers';
-import { useParams } from 'react-router';
+import { getUserBooking } from '../Helpers';
 
 Calendar.propTypes = {
   isInput: PropTypes.bool,
   booking: PropTypes.object,
   listingDetails: PropTypes.object,
   handleChange: PropTypes.func,
+  readOnly: PropTypes.bool,
 }
 
-export default function Calendar ({ isInput, booking, listingDetails, handleChange, readOnly}) {
-
+export default function Calendar ({ isInput, booking, listingDetails, handleChange, readOnly }) {
   const shouldDisableDate = (date) => {
     if (isInput) {
       return false;
@@ -43,7 +41,6 @@ export default function Calendar ({ isInput, booking, listingDetails, handleChan
 
       // Check if the date does not coincide with a booking
       // const safe = checkPreviousBookings(date);
-      const id = listingDetails.id;
       const bookings = listingDetails.bookings;
       const userBookings = getUserBooking(listingDetails);
       for (let i = 0; i < bookings.length; i++) {

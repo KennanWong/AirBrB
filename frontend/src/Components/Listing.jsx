@@ -1,5 +1,3 @@
-/* eslint-disable */
-
 import React from 'react';
 
 import Card from '@mui/material/Card';
@@ -17,6 +15,12 @@ import {
 } from '../Helpers.jsx'
 import UserRating from './Rating';
 import { CentredFlex } from './Styles';
+import PropTypes from 'prop-types';
+
+Listing.propTypes = {
+  publicView: PropTypes.bool,
+  details: PropTypes.object,
+}
 
 export default function Listing ({ publicView, details }) {
   const [listingDetails, setListingDetails] = React.useState({
@@ -46,13 +50,11 @@ export default function Listing ({ publicView, details }) {
     } else {
       navigate(`/${route}/${details.id}`)
     }
-    
-    
   }
   console.log('creating card for ', listingDetails);
   return (
     <div>
-      <Card sx={{ minWidth: 345, border: '3px solid #f0f0f0', borderRadius:'15px' }}>
+      <Card sx={{ minWidth: 345, border: '3px solid #f0f0f0', borderRadius: '15px' }}>
         <CardActionArea onClick={() => navigateTo(null)}>
           { (listingDetails.thumbnail !== '')
             ? <CardMedia
@@ -64,18 +66,18 @@ export default function Listing ({ publicView, details }) {
             : <CardMedia
                 component="img"
                 height="140"
-                image={".../Images/home-icon.png"}
+                image={'.../Images/home-icon.png'}
                 alt={listingDetails.title}
               />
           }
           <CardContent>
             <Typography gutterBottom variant="h5" component="div">
-              {listingDetails.title}  
+              {listingDetails.title}
             </Typography>
-            <ListingDetailsBar bathroomNum={Number(listingDetails.bathrooms)} bedroomNum={Number(listingDetails.bedroomsList.length)}/> 
+            <ListingDetailsBar bathroomNum={Number(listingDetails.bathrooms)} bedroomNum={Number(listingDetails.bedroomsList.length)}/>
             <h3>Entire {listingDetails.type}. </h3>
             <h4> ${listingDetails.price} per night.</h4>
-            <UserRating readOnly={true} details={listingDetails} setDetails={setListingDetails}/> 
+            <UserRating readOnly={true} details={listingDetails} setDetails={setListingDetails}/>
           </CardContent>
         </CardActionArea>
         {(isOwner && !publicView)
@@ -93,7 +95,6 @@ export default function Listing ({ publicView, details }) {
               <br/>
             </Container>
           : <div></div>
-        
         }
       </Card>
     </div>

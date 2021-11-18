@@ -1,4 +1,3 @@
-/* eslint-disable */
 import React from 'react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -9,6 +8,8 @@ import {
   useNavigate,
 } from 'react-router-dom'
 
+import PropTypes from 'prop-types';
+
 // Self defined Components
 import TextInput from '../Components/TextInput';
 import {
@@ -17,6 +18,10 @@ import {
 } from '../Components/Styles';
 import PasswordInput from '../Components/PasswordInput';
 import { apiFetch, setFieldInState, setToken, setEmail } from '../Helpers';
+
+Register.propTypes = {
+  setActiveUser: PropTypes.func,
+}
 
 export default function Register ({ setActiveUser }) {
   const [name, setName] = React.useState('');
@@ -62,7 +67,7 @@ export default function Register ({ setActiveUser }) {
   }
 
   const navigate = useNavigate();
-  
+
   const submitRegister = async (name, email, password, confirmPassword, setActiveUser, navigate) => {
     // If passwords do not match
     if (password !== confirmPassword) {
@@ -82,10 +87,9 @@ export default function Register ({ setActiveUser }) {
       console.log(errorStatus);
       console.log(errorMsg);
       return;
-    } 
-  
+    }
     // If fields are empty
-    if (name == '' || email == '' || password == '' || confirmPassword == '') {
+    if (name === '' || email === '' || password === '' || confirmPassword === '') {
       setFieldInState('name', true, errorStatus, setErrorStatus);
       setFieldInState('email', true, errorStatus, setErrorStatus);
       setFieldInState('password', true, errorStatus, setErrorStatus);
@@ -135,7 +139,7 @@ export default function Register ({ setActiveUser }) {
                 label='Name'
                 setState={setName}
               />
-              <TextInput 
+              <TextInput
                 errorStatus={errorStatus.email}
                 errorMsg={errorMsg.email}
                 resetError={resetError}

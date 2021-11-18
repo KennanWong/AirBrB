@@ -9,7 +9,6 @@ export const logout = async (setActiveUser, navigate) => {
       console.log(ret);
       setToken(null);
       setActiveUser(false);
-      // navigate('/');
     } catch (e) {
       console.log(e);
     }

@@ -1,4 +1,3 @@
-/* eslint-disable */
 import React from 'react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -9,6 +8,8 @@ import {
   useNavigate,
 } from 'react-router-dom';
 
+import PropTypes from 'prop-types';
+
 // Self defined Components
 import TextInput from '../Components/TextInput';
 import {
@@ -17,8 +18,6 @@ import {
 } from '../Components/Styles';
 import PasswordInput from '../Components/PasswordInput';
 import { apiFetch, setEmail, setToken } from '../Helpers';
-
-// https://www.canva.com/colors/color-palettes/summer-splash/
 
 const submitLogin = async (email, password, setErrorMsg, setErrorStatus, setActiveUser, navigate) => {
   const body = {
@@ -43,7 +42,11 @@ const submitLogin = async (email, password, setErrorMsg, setErrorStatus, setActi
       password: e,
     })
   }
-}; 
+};
+
+Login.propTypes = {
+  setActiveUser: PropTypes.func,
+}
 
 export default function Login ({ setActiveUser }) {
   const [email, setEmail] = React.useState('');
@@ -96,7 +99,7 @@ export default function Login ({ setActiveUser }) {
           <Divider variant="middle"/>
           <StyledForm>
             <Link to='/register'>
-              Don't have an Accout? Register here.
+              Don&#39t have an Accout? Register here.
             </Link>
           </StyledForm>
         </WrappedContainer>
