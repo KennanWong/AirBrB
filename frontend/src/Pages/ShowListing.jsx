@@ -21,7 +21,7 @@ import { Bedrooms } from '../Components/Bedrooms';
 import UserRating from '../Components/Rating';
 import Ammenities from '../Components/Ammenities';
 import { AddressString } from '../Components/Address';
-import Booking from '../Components/Booking';
+import MakeBooking from '../Components/MakeBooking';
 
 export default function ShowListing () {
   const [listingDetails, setListingDetails] = React.useState({
@@ -104,7 +104,7 @@ export default function ShowListing () {
                 </List>
               </Grid>
               <Grid item xs={4}>
-                <Booking id={id} isInput={false} listingDetails={listingDetails} setListingDetails={setListingDetails}/>
+                <MakeBooking id={id} isInput={false} listingDetails={listingDetails} setListingDetails={setListingDetails}/>
               </Grid>
             </Grid>
           </Box>

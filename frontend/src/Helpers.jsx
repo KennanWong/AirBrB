@@ -115,9 +115,14 @@ export const getListingDetails = async (id, listingDetails, setListingDetails) =
     if (getToken() !== null) {
       ret = await apiFetch('GET', '/bookings', getToken(), {});
       const tmp = ret.bookings;
+      console.log(tmp);
       for (let i = 0; i < tmp.length; i++) {
-        if (tmp[i].listingId === id) {
+        console.log(tmp[i].listingId, 'vs', id);
+        if (Number(tmp[i].listingId) === id) {
           bookings.push(tmp[i]);
+          console.log(bookings);
+        } else {
+          console.log('Booking doesnt match');
         }
       }
     }
@@ -298,11 +303,13 @@ export const dynamicSort = (property) => {
 export const getUserBooking = (listingDetails) => {
   const bookings = listingDetails.bookings;
   let userBooking = null;
-  for (let i = 0; i < bookings.length; i++) {
-    if (bookings[i].owner === getEmail()) {
-      userBooking = bookings[i];
-      console.log(userBooking);
-      break;
+  if (bookings !== null) {
+    for (let i = 0; i < bookings.length; i++) {
+      if (bookings[i].owner === getEmail()) {
+        userBooking = bookings[i];
+        console.log(userBooking);
+        break;
+      }
     }
   }
   return userBooking;

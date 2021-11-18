@@ -26,6 +26,6 @@ export default function Availability ({ index, listingDetails, setListingDetails
 
   
   return (
-    <Calendar isInput={true} booking={availability} listingDetails={null} handleChange={handleChange} published={published}/>
+    <Calendar isInput={true} booking={availability} listingDetails={null} handleChange={handleChange} readOnly={published}/>
   )
 }

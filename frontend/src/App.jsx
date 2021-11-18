@@ -24,6 +24,7 @@ import MyListings from './Pages/MyListings';
 import { getToken } from './Helpers';
 import Listings from './Pages/Listings';
 import ShowListing from './Pages/ShowListing';
+import ManageBookings from './Pages/ManageBookings';
 
 const isUserActive = () => {
   console.log('token: ', getToken())
@@ -94,10 +95,10 @@ function Header ({ activeUser, setActiveUser }) {
         >
           {activeUser
             ? <div>
-                <MenuItem onClick={handleClose}>Profile</MenuItem>
                 <MenuItem onClick={handleClose}>
                   <Link to='/mylistings'>My Listings</Link>
                 </MenuItem>
+                <MenuItem onClick={handleClose}><Link to='/manageBookings'>Manage Bookings</Link></MenuItem>
                 <MenuItem onClick={(e) => logoutFn(navigate)}>Logout</MenuItem>
               </div>
             : <div>
@@ -131,8 +132,9 @@ function Body ({ activeUser, setActiveUser }) {
           <Route path="/listings" element={<Listings/>}/>
           <Route path="/myListings" element={<MyListings/>}/>
           <Route path="/createListing" element={<CreateListing newListing={true}/>}/>
-          <Route path="/listing/:id" element={<ShowListing/>}></Route>
+          <Route path="/listing/:id" element={<ShowListing/>}/>
           <Route path="/editListing/:id" element={<CreateListing newListing={false}/>}/>
+          <Route path="/manageBookings/:id" element={<ManageBookings/>}/>
         </Routes>
       </BrowserRouter>
     </div>

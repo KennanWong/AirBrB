@@ -33,21 +33,13 @@ export default function Calendar ({ isInput, booking, listingDetails, handleChan
         const dates = availabilityList[i];
         from = new Date(dates[0]);
         to = new Date(dates[1])
-        if (date >= from) {
-          console.log('date is later than from')
-        }
-        if (date <= to) {
-          console.log('date is before to');
-        }
         if (date >= from && date <= to) {
-          console.log(from, 'vs', date, 'vs', to);
           availableCheck = false;
         }
       }
       if (availableCheck) {
         return availableCheck;
       }
-      console.log('now checking bookings')
 
       // Check if the date does not coincide with a booking
       // const safe = checkPreviousBookings(date);
@@ -56,7 +48,7 @@ export default function Calendar ({ isInput, booking, listingDetails, handleChan
       const userBooking = getUserBooking(listingDetails);
       for (let i = 0; i < bookings.length; i++) {
         const booking = bookings[i];
-        if (booking.listingId === id && booking !== userBooking) {
+        if (booking !== userBooking && booking.status === 'accepted') {
           const dates = booking.dateRange.dates;
           from = new Date(dates[0]);
           to = new Date(dates[1]);

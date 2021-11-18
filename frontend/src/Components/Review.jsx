@@ -7,9 +7,16 @@ import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
 import styled from 'styled-components';
 
+import {
+  apiFetch,
+  getEmail, getListingDetails, getToken, getUserBooking
+} from '../Helpers'
+
 const ReviewCard = styled.div`
   background-color: #f5f5f5;
   width: 100%;
+  padding: 15px;
+  border-radius: 15px;
 `;
 
 Review.propTypes = {
@@ -19,23 +26,38 @@ Review.propTypes = {
   setListingDetails: PropTypes.func,
 }
 
+const submitReview = async (userReview, listingDetails, setListingDetails) => {
+  const body = {
+    review: userReview,
+  }
+  await apiFetch('PUT', `/listings/${listingDetails.id}/review/${userReview.bookingId}`, getToken(), body);
+  getListingDetails(listingDetails.id, listingDetails, setListingDetails);
+}
+
 export default function Review ({ isInput, review, listingDetails, setListingDetails }) {
-  const [userReview, setUserReview] = React.useState = ({
+  const [userReview, setUserReview] = React.useState({
     email: '',
     bookingId: '',
     rating: 0,
     comment: '',
   });
 
+  React.useEffect(() => {
+    const booking = getUserBooking(listingDetails);
+    if (booking !== null) {
+      setUserReview({ ...userReview, email: getEmail(), bookingId: booking.id })
+    }
+  }, []);
+
   const handleChange = (prop, value) => {
-    setUserReview({ ...userReview, [prop]: value })
+    setUserReview({ ...userReview, [prop]: value });
   }
 
   return (
     <ReviewCard>
       {(isInput)
-        ? <Stack>
-            <Typography variant="h6" gutterBottom component="div"> {review.email} </Typography>
+        ? <Stack spacing={2}>
+            <Typography variant="h6" gutterBottom component="div"> {userReview.email} - Booking#: {userReview.bookingId} </Typography>
             <TextField
               id="outlined-multiline-static"
               label="Comment"
@@ -47,17 +69,16 @@ export default function Review ({ isInput, review, listingDetails, setListingDet
               }}
             />
             <Rating
-              readOnly
               value={userReview.rating}
               onChange={(e, newValue) => {
                 handleChange('rating', newValue);
               }}
               precision={0.5}
             />
-            <Button variant={'contained'}>Submit Review</Button>
+            <Button variant={'contained'} onClick={() => submitReview(userReview, listingDetails, setListingDetails)}>Submit Review</Button>
           </Stack>
-        : <Stack>
-            <Typography variant="h6" gutterBottom component="div"> {review.email} </Typography>
+        : <Stack spacing={2}>
+            <Typography variant="h6" gutterBottom component="div"> {review.email} - Booking#: {review.bookingId}</Typography>
             <Typography variant="body2" gutterBottom> {review.comment} </Typography>
             <Rating
               readOnly

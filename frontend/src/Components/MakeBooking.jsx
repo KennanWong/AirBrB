@@ -24,7 +24,7 @@ const makeBooking = async (id, booking, listingDetails, setListingDetails) => {
   await getListingDetails(id, listingDetails, setListingDetails);
 }
 
-export default function Booking ({ id, listingDetails, setListingDetails }) {
+export default function MakeBooking ({ id, listingDetails, setListingDetails }) {
   const [booking, setBooking] = React.useState({ 
     dates: [null, null],
     price: 0,
@@ -50,7 +50,7 @@ export default function Booking ({ id, listingDetails, setListingDetails }) {
       numDays = datediff(tmp[0], tmp[1]) + 1;
       console.log('numDays', numDays);
     }
-    setBooking({ ...booking, [prop]:tmp, ['numDays']: numDays });
+    setBooking({ ...booking, [prop]:tmp, numDays: numDays, price: listingDetails.price * numDays});
   }
   
   let canMakeBooking = false;
