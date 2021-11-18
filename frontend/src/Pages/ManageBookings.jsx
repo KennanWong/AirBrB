@@ -8,7 +8,7 @@ import {
   Flex,
   SpacedFlex
 } from '../Components/Styles';
-import { datediff, getListingDetails } from '../Helpers';
+import { apiFetch, checkDates, datediff, getListingDetails, getToken } from '../Helpers';
 import { useParams } from 'react-router';
 import Booking from '../Components/Booking';
 
@@ -34,7 +34,7 @@ export default function ManageBookings () {
     profit: 0,
   })
 
-  React.useEffect(() => {
+  React.useEffect(async () => {
     console.log(listingDetails)
     const bookings = listingDetails.bookings;
     const historyTmp = [];
@@ -44,12 +44,19 @@ export default function ManageBookings () {
     let profit = 0;
     for (let i = 0; i < bookings.length; i++) {
       if (bookings[i].status === 'pending') {
-        pendingTmp.push(bookings[i]);
+        if (!checkDates(bookings[i].dateRange.dates, listingDetails)) {
+          await apiFetch('PUT', `/bookings/decline/${bookings[i].id}`, getToken(), {});
+        } else {
+          pendingTmp.push(bookings[i]);
+        }
       } else {
+        if (bookings[i].status === 'accepted') {
+          profit += bookings[i].totalPrice;
+        }
+        console.log(bookings[i]);
         historyTmp.push(bookings[i]);
         daysBooked += bookings[i].dateRange.numDays;
       }
-      profit += bookings[i].totalPrice;
     }
     liveDays = datediff(new Date(listingDetails.postedOn), new Date());
     setBookingsList({ pending: pendingTmp, history: historyTmp, liveDays: liveDays, daysBooked: daysBooked, profit: profit })

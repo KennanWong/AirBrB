@@ -121,8 +121,6 @@ export const getListingDetails = async (id, listingDetails, setListingDetails) =
         if (Number(tmp[i].listingId) === Number(id)) {
           bookings.push(tmp[i]);
           console.log(bookings);
-        } else {
-          console.log('Booking doesnt match');
         }
       }
     }
@@ -283,11 +281,24 @@ export const filter = (details, params) => {
 
   // Check date param
   const dates = params.dates;
-  if (dates[0] !== null && dates[1] !== null) {
-    for (const availability in details.availability) {
-      if (!(dates[0] >= availability[0] && dates[1] <= availability[1])) {
-        return false;
+  console.log(dates);
+  pass = false;
+  if (dates !== null) {
+    if (dates[0] !== null && dates[1] !== null) {
+      const availability = details.availability;
+      for (let i = 0; i < availability.length; i++) {
+        console.log(dates);
+        console.log(availability);
+        if (dates[0] >= new Date(availability[i][0]) && dates[1] <= new Date(availability[i][1])) {
+          console.log('Match availability criteria');
+          pass = true;
+        } else {
+          console.log('Dates dont fit availability');
+        }
       }
+    }
+    if (!pass) {
+      return pass;
     }
   }
 
@@ -330,4 +341,22 @@ export const getUserBooking = (listingDetails) => {
   }
   console.log('userBookings', userBooking);
   return userBooking;
+}
+
+export const checkDates = (dates, listingDetails) => {
+  const bookings = listingDetails.bookings;
+  for (let i = 0; i < bookings.length; i++) {
+    if (bookings[i].status === 'accepted') {
+      if (dates[0] >= bookings[i].dateRange.dates[0] && dates[0] <= bookings[i].dateRange.dates[1]) {
+        return false;
+      }
+      if (dates[1] >= bookings[i].dateRange.dates[0] && dates[1] <= bookings[i].dateRange.dates[1]) {
+        return false;
+      }
+      if (bookings[i].dateRange.dates[0] <= dates[0] && bookings[i].dateRange.dates[1] >= dates[1]) {
+        return false;
+      }
+    }
+  }
+  return true;
 }

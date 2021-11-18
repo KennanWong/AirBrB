@@ -78,7 +78,7 @@ export default function Listing ({ publicView, details }) {
             <UserRating readOnly={true} details={listingDetails} setDetails={setListingDetails}/> 
           </CardContent>
         </CardActionArea>
-        {(isOwner)
+        {(isOwner && !publicView)
           ? <Container>
               <Divider/>
               <br/>
