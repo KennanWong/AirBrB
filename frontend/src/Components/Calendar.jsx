@@ -7,7 +7,7 @@ import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import Box from '@mui/material/Box';
 
 import PropTypes from 'prop-types';
-import { apiFetch, getToken } from '../Helpers';
+import { apiFetch, getToken, getUserBooking } from '../Helpers';
 import { useParams } from 'react-router';
 
 Calendar.propTypes = {
@@ -17,45 +17,54 @@ Calendar.propTypes = {
   handleChange: PropTypes.func,
 }
 
-export default function Calendar ({ isInput, booking, listingDetails, handleChange }) {
-  const shouldDisableDate = async (date) => {
+export default function Calendar ({ isInput, booking, listingDetails, handleChange, readOnly}) {
+
+  const shouldDisableDate = (date) => {
     if (isInput) {
       return false;
     }
     if (listingDetails !== null) {
       const availabilityList = listingDetails.availability;
-      console.log(availabilityList);
       let from;
       let to;
       // Check if the date matches the listings availabilities
+      let availableCheck = true;
       for (let i = 0; i < availabilityList.length; i++) {
-        const availability = availabilityList[i];
-        const dates = availability.dates;
+        const dates = availabilityList[i];
         from = new Date(dates[0]);
         to = new Date(dates[1])
-        if (!(date >= from && date <= to)) {
-          return true;
+        if (date >= from) {
+          console.log('date is later than from')
+        }
+        if (date <= to) {
+          console.log('date is before to');
+        }
+        if (date >= from && date <= to) {
+          console.log(from, 'vs', date, 'vs', to);
+          availableCheck = false;
         }
       }
+      if (availableCheck) {
+        return availableCheck;
+      }
+      console.log('now checking bookings')
 
       // Check if the date does not coincide with a booking
-
-      const ret = await apiFetch('GET', '/bookings', getToken(), {});
-      const bookings = ret.bookings;
-      const params = useParams();
-      const id = params.id;
+      // const safe = checkPreviousBookings(date);
+      const id = listingDetails.id;
+      const bookings = listingDetails.bookings;
+      const userBooking = getUserBooking(listingDetails);
       for (let i = 0; i < bookings.length; i++) {
         const booking = bookings[i];
-        if (booking.listingId === id) {
+        if (booking.listingId === id && booking !== userBooking) {
           const dates = booking.dateRange.dates;
           from = new Date(dates[0]);
           to = new Date(dates[1]);
-          if (date >= from && date <= to) {
+          if (date > from && date < to) {
             return true;
           }
         }
       }
-      
     }
     return false;
   }
@@ -70,25 +79,29 @@ export default function Calendar ({ isInput, booking, listingDetails, handleChan
     startText = 'Check-in';
     endText = 'Check-out';
   }
+
   return (
     <LocalizationProvider dateAdapter={AdapterDateFns}>
       <DateRangePicker
         startText={startText}
         endText={endText}
         value={booking.dates}
-        onChange={(newValue) => {
-          handleChange('dates', newValue);
+        onChange={async (newValue) => {
+          await handleChange('dates', newValue);
         }}
         calendars={1}
         renderInput={(startProps, endProps) => (
           <React.Fragment>
-            <TextField {...startProps} />
+            <TextField fullWidth {...startProps} />
             <Box sx={{ mx: 2 }}> to </Box>
-            <TextField {...endProps} />
+            <TextField fullWidth {...endProps} />
           </React.Fragment>
         )}
+        readOnly={readOnly}
         inputFormat={'dd/MM/yyyy'}
         shouldDisableDate={shouldDisableDate}
+        error={false}
+        disablePast
       />
     </LocalizationProvider>
   );

@@ -19,6 +19,7 @@ const BedroomCardsList = styled.div`
   display: flex;
   gap: 10px;
   overflow: auto;
+  flex-wrap: wrap;
 `;
 
 const BedroomInputCards = styled.div`

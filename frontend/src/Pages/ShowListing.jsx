@@ -25,6 +25,7 @@ import Booking from '../Components/Booking';
 
 export default function ShowListing () {
   const [listingDetails, setListingDetails] = React.useState({
+    id:'',
     title: '',
     address: {
       streetAddress: '',
@@ -43,6 +44,7 @@ export default function ShowListing () {
     reviews: [],
     ammenities: [],
     availability: [],
+    bookings:[],
   })
   const params = useParams();
   const id = params.id;
@@ -102,7 +104,7 @@ export default function ShowListing () {
                 </List>
               </Grid>
               <Grid item xs={4}>
-                <Booking id={id} isInput={false} listingDetails={listingDetails}/>
+                <Booking id={id} isInput={false} listingDetails={listingDetails} setListingDetails={setListingDetails}/>
               </Grid>
             </Grid>
           </Box>

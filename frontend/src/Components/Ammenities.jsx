@@ -131,7 +131,7 @@ function AddAmmenitie ({ details, setDetails }) {
 
 const RemoveFromList = (key, details, setDetails) => {
   const list = details.ammenities;
-  list.splice(key, key + 1);
+  list.splice(key, 1);
   setDetails({ ...details, ammenities: list });
 }
 

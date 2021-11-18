@@ -83,7 +83,7 @@ function BedroomInput ({ bedroomNum, listingDetails, setListingDetails }) {
             <IconButton
               onClick={(e) => {
                 const bedroomsListCpy = listingDetails.bedroomsList;
-                bedroomsListCpy.splice(bedroomNum - 1, bedroomNum);
+                bedroomsListCpy.splice(bedroomNum - 1, 1);
                 setListingDetails({ ...listingDetails, bedroomsList: bedroomsListCpy })
                 console.log('Remove this bedroom')
               }}

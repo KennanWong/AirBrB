@@ -10,6 +10,8 @@ import PropTypes from 'prop-types'
 import {
   getEmail, sendListingDetails,
 } from '../Helpers'
+import { List } from '@mui/material';
+import Review from './Review';
 
 export const getReviewRating = (reviews) => {
   let sum = 0;
@@ -34,7 +36,7 @@ const addReview = (listingId, value, details, setDetails) => {
       if (value != null) {
         reviews[i].review = value;
       } else {
-        reviews.splice(i, i + 1);
+        reviews.splice(i, 1);
       }
       setDetails({...details, reviews: reviews});
       sendListingDetails(false, listingId, details, null);
@@ -85,19 +87,9 @@ export default function UserRating ({ listingId, readOnly, details, setDetails }
       <Typography component="legend">Community Rating: {details.reviews.length} Reviews.</Typography>
       <Rating name="read-only" value={communityValue} readOnly precision={0.5}/>
       {!readOnly
-        ? <div>
-            <Typography component="legend">User Rating</Typography>
-            <Rating
-              name="simple-controlled"
-              value={value}
-              onChange={(event, newValue) => {
-                addReview(listingId, newValue, details, setDetails);
-                setCommunityValue(getReviewRating(details.reviews));
-                setValue(newValue);
-              }}
-              precision={0.5}
-            />
-          </div>
+        ? <List>
+            <Review isInput={true} review = {null} listingDetails={details} setListingDetails={setDetails}/>
+          </List>
         : <div></div>
       }
 

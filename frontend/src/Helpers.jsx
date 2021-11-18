@@ -108,13 +108,23 @@ export function fileToDataUrl (file) {
 
 export const getListingDetails = async (id, listingDetails, setListingDetails) => {
   try {
-    const ret = await apiFetch('GET', `/listings/${id}`, null, {});
+    let ret = await apiFetch('GET', `/listings/${id}`, null, {});
     const listing = ret.listing;
     console.log('listing deets', listing);
-
+    const bookings = [];
+    if (getToken() !== null) {
+      ret = await apiFetch('GET', '/bookings', getToken(), {});
+      const tmp = ret.bookings;
+      for (let i = 0; i < tmp.length; i++) {
+        if (tmp[i].listingId === id) {
+          bookings.push(tmp[i]);
+        }
+      }
+    }
     if (listingDetails != null) {
       setListingDetails({
         ...listingDetails,
+        id: id,
         title: listing.title,
         address: listing.address,
         price: Number(listing.price),
@@ -127,6 +137,7 @@ export const getListingDetails = async (id, listingDetails, setListingDetails) =
         ammenities: listing.metadata.ammenities,
         published: listing.published,
         availability: listing.availability,
+        bookings: bookings,
       })
     }
     return listing;
@@ -217,7 +228,6 @@ export const filter = (details, params) => {
     if (details.metadata.type.toLowerCase().includes(search)) {
       pass = true;
     }
-    console.log('ammenities', details.metadata.ammenities);
     const ammenities = details.metadata.ammenities;
     for (const item in ammenities) {
       console.log(ammenities[item]);
@@ -229,6 +239,7 @@ export const filter = (details, params) => {
       pass = true;
     }
     if (!pass) {
+      console.log('does not match search params');
       return false;
     }
   }
@@ -282,4 +293,17 @@ export const dynamicSort = (property) => {
     const result = (a[property] < b[property]) ? -1 : (a[property] > b[property]) ? 1 : 0;
     return result * sortOrder;
   }
+}
+
+export const getUserBooking = (listingDetails) => {
+  const bookings = listingDetails.bookings;
+  let userBooking = null;
+  for (let i = 0; i < bookings.length; i++) {
+    if (bookings[i].owner === getEmail()) {
+      userBooking = bookings[i];
+      console.log(userBooking);
+      break;
+    }
+  }
+  return userBooking;
 }

@@ -88,9 +88,7 @@ export default function CreateListing ({ newListing }) {
     beds: '',
     bedroomsList: [],
     ammenities: [],
-    availability:[{
-      dates: [null, null]
-    }],
+    availability:[],
     published: false,
   };
 
@@ -139,8 +137,7 @@ export default function CreateListing ({ newListing }) {
       if (event.target.checked) {
         const availabilities = details.availability;
         console.log('Availabilities: ', availabilities);
-        console.log(availabilities[0].dates[0]);
-        if (availabilities[0].dates[0] !== null && availabilities[0].dates[1] !== null) {
+        if (availabilities[0][0] !== null && availabilities[0][1] !== null) {
           const body = {
             availability: details.availability,
           }
@@ -162,12 +159,15 @@ export default function CreateListing ({ newListing }) {
   };
   const [toggleUpload, setToggleUpload] = React.useState((details.thumbnail !== ''));
 
-  const addAvailability= () => {
+  const addAvailability = () => {
     const availabilityList = details.availability;
-    const newAvailability = {
-      dates: [null, null]
-    }
-    availabilityList.push(newAvailability);
+    availabilityList.push([null, null]);
+    setDetails({ ...details, availability: availabilityList });
+  }
+
+  const removeAvailability = (i) => {
+    const availabilityList = details.availability;
+    availabilityList.splice(i, 1);
     setDetails({ ...details, availability: availabilityList });
   }
 
@@ -244,7 +244,7 @@ export default function CreateListing ({ newListing }) {
         <Divider variant="middle"></Divider>
         <Box sx={{ my: 3, mx: 2 }} fullWidth>
           <Box sx={{ flexGrow: 1 }}>
-            <Grid container spacing={2}>
+            <Grid container >
               <Grid item xs={8}>
                 <List sx={{ width: '90%', bgcolor: 'background.paper' }}>
                   <ListItem>
@@ -302,21 +302,40 @@ export default function CreateListing ({ newListing }) {
                       {(!newListing)
                         ? <div>
                             <br/>
-                            <br/>
                             <Divider/>
                             <br/>
+                            <List sx={{padding: '0px'}}>
                             {details.availability.map((value, key) => {
-                              return <Availability key={key }index={key} listingDetails={details} setListingDetails={setDetails}/>
+                              return  <ListItem key={key}>
+                                        <div>
+                                          <Availability  index={key} listingDetails={details} setListingDetails={setDetails} published={details.published}/>
+                                          {(details.published)
+                                            ? <div></div>
+                                            : <CentredFlex>
+                                                <IconButton onClick={() => removeAvailability(key)}>
+                                                  <DeleteIcon/>
+                                                </IconButton>
+                                              </CentredFlex>
+                                          }
+                                        </div>
+                                      </ListItem>
                             })}
+                            </List>
                             <br/>
                             <Divider/>
                             <br/>
-                            <CentredFlex>
-                              <Button variant="contained" onClick={() => addAvailability()}>Add Availability</Button>
-                            </CentredFlex>
+                            { (details.published)
+                              ? <CentredFlex>
+                                  <Button fullWidth variant="contained" disabled> Unpublish To Modify</Button>
+                                </CentredFlex>
+                              : <CentredFlex>
+                                  <Button variant="contained" onClick={() => addAvailability()}>Add Availability</Button>
+                                </CentredFlex>
+                            }
                           </div>
                         : <div></div>
                       }
+                      
                     </DataEnty>
                   </ListItem>
                 </List>
