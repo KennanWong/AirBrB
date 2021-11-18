@@ -5,7 +5,6 @@ import {
   Route,
   Routes,
   BrowserRouter,
-  Link,
   Navigate,
   useNavigate,
 } from 'react-router-dom';
@@ -95,22 +94,42 @@ function Header ({ activeUser, setActiveUser }) {
         >
           {activeUser
             ? <div>
-                <MenuItem onClick={handleClose}>
-                  <Link to='/mylistings'>My Listings</Link>
+                <MenuItem
+                  onClick={() => {
+                    handleClose();
+                    navigate('/myListings');
+                  }}
+                >
+                  My Listings
                 </MenuItem>
                 <MenuItem onClick={(e) => logoutFn(navigate)}>Logout</MenuItem>
               </div>
             : <div>
-                <MenuItem onClick={handleClose}>
-                  <Link to='/login'>Login</Link>
+                <MenuItem
+                  onClick={() => {
+                    handleClose();
+                    navigate('/login');
+                  }}
+                >
+                  Login
                 </MenuItem>
-                <MenuItem onClick={handleClose}>
-                  <Link to='/register'>Register</Link>
+                <MenuItem
+                  onClick={() => {
+                    handleClose();
+                    navigate('/register')
+                  }}
+                >
+                  Register
                 </MenuItem>
               </div>
           }
-          <MenuItem onClick={handleClose}>
-            <Link to='/'>Home</Link>
+          <MenuItem
+            onClick={() => {
+              handleClose();
+              navigate('/');
+            }}
+          >
+            Home
           </MenuItem>
         </Menu>
       </div>

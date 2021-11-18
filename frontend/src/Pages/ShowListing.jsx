@@ -1,5 +1,3 @@
-/* eslint-disable */
-
 import React from 'react';
 
 import {
@@ -25,7 +23,7 @@ import MakeBooking from '../Components/MakeBooking';
 
 export default function ShowListing () {
   const [listingDetails, setListingDetails] = React.useState({
-    id:'',
+    id: '',
     title: '',
     address: {
       streetAddress: '',
@@ -44,7 +42,7 @@ export default function ShowListing () {
     reviews: [],
     ammenities: [],
     availability: [],
-    bookings:[],
+    bookings: [],
   })
   const params = useParams();
   const id = params.id;

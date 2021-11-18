@@ -3,14 +3,17 @@ import Box from '@mui/material/Box';
 import { Container, Divider } from '@mui/material';
 import Button from '@mui/material/Button';
 
-import { ListingsBar, StyledLink } from '../Components/Styles';
+import { ListingsBar } from '../Components/Styles';
 import {
   getListings,
 } from '../Helpers';
 import Listing from '../Components/Listing';
+import { useNavigate } from 'react-router';
 
 export default function MyListings () {
   const [listingsList, setListingsList] = React.useState([]);
+
+  const navigate = useNavigate();
 
   React.useEffect(() => {
     getListings(true, listingsList, setListingsList, null);
@@ -31,10 +34,8 @@ export default function MyListings () {
       <br/>
       <Divider></Divider>
       <br/>
-      <Button variant="outlined" >
-        <StyledLink style={{ textDecoration: 'none' }} to="/createListing">
-          Create new listing.
-        </StyledLink>
+      <Button variant="outlined" onClick={() => navigate('/createListing')}>
+        Create new listing.
       </Button>
     </Container>
   );

@@ -349,11 +349,9 @@ export const checkDates = (dates, listingDetails) => {
     if (bookings[i].status === 'accepted') {
       if (dates[0] >= bookings[i].dateRange.dates[0] && dates[0] <= bookings[i].dateRange.dates[1]) {
         return false;
-      }
-      if (dates[1] >= bookings[i].dateRange.dates[0] && dates[1] <= bookings[i].dateRange.dates[1]) {
+      } else if (dates[1] >= bookings[i].dateRange.dates[0] && dates[1] <= bookings[i].dateRange.dates[1]) {
         return false;
-      }
-      if (bookings[i].dateRange.dates[0] <= dates[0] && bookings[i].dateRange.dates[1] >= dates[1]) {
+      } else if (bookings[i].dateRange.dates[0] >= dates[0] && bookings[i].dateRange.dates[1] <= dates[1]) {
         return false;
       }
     }

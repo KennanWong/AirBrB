@@ -171,10 +171,12 @@ export default function CreateListing ({ newListing }) {
           <Button variant='outlined' startIcon={<DeleteIcon/>}>
             Delete
           </Button>
-          {(newListing)
-            ? <FormControlLabel control={<Switch checked={details.published} disabled/>} label="Publish Listing" labelPlacement='start'/>
-            : <FormControlLabel control={<Switch checked={details.published} onChange={handleChange('published')}/>} label="Publish Listing" labelPlacement='start'/>
-          }
+          <FormControlLabel
+            control={<Switch checked={details.published} onChange={handleChange('published')}/>}
+            label="Publish Listing"
+            labelPlacement='start'
+            disabled={newListing}
+          />
         </SpacedFlex>
         <Box sx={{ my: 3, mx: 2 }}>
           <Box sx={{ flexGrow: 1 }}>

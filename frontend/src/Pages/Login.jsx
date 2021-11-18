@@ -90,7 +90,7 @@ export default function Login ({ setActiveUser }) {
               Welcome back to AirBrb.
             </h1>
             <div>
-              <TextInput errorStatus={errorStatus.email} errorMsg={errorMsg.email} resetError={resetError} label='Email' setState={setEmail}/>
+              <TextInput errorStatus={errorStatus.email} errorMsg={errorMsg.email} resetError={resetError} label={'Email'} setState={setEmail}/>
               <PasswordInput errorStatus={errorStatus.password} errorMsg={errorMsg.password} resetError={resetError} label='Password' passwordField={passwordField} setState={setPasswordField}/>
             </div>
             <br/>
@@ -99,7 +99,7 @@ export default function Login ({ setActiveUser }) {
           <Divider variant="middle"/>
           <StyledForm>
             <Link to='/register'>
-              Don&#39t have an Accout? Register here.
+              Don&#39;t have an Account? Register here.
             </Link>
           </StyledForm>
         </WrappedContainer>

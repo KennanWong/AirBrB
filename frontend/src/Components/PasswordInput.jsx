@@ -84,6 +84,7 @@ export default function PasswordInput ({ errorStatus, errorMsg, resetError, labe
             </InputAdornment>
           }
           label={label}
+          name={label}
           />
         </FormControl>
       }

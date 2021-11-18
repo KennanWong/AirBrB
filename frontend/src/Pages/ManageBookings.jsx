@@ -8,7 +8,7 @@ import {
   Flex,
   SpacedFlex
 } from '../Components/Styles';
-import { apiFetch, checkDates, datediff, getListingDetails, getToken } from '../Helpers';
+import { datediff, getListingDetails, } from '../Helpers';
 import { useParams } from 'react-router';
 import Booking from '../Components/Booking';
 
@@ -44,18 +44,13 @@ export default function ManageBookings () {
     let profit = 0;
     for (let i = 0; i < bookings.length; i++) {
       if (bookings[i].status === 'pending') {
-        if (!checkDates(bookings[i].dateRange.dates, listingDetails)) {
-          await apiFetch('PUT', `/bookings/decline/${bookings[i].id}`, getToken(), {});
-        } else {
-          pendingTmp.push(bookings[i]);
-        }
+        pendingTmp.push(bookings[i]);
       } else {
         if (bookings[i].status === 'accepted') {
           profit += bookings[i].totalPrice;
+          daysBooked += bookings[i].dateRange.numDays;
         }
-        console.log(bookings[i]);
         historyTmp.push(bookings[i]);
-        daysBooked += bookings[i].dateRange.numDays;
       }
     }
     liveDays = datediff(new Date(listingDetails.postedOn), new Date());

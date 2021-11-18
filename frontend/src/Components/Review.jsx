@@ -65,6 +65,7 @@ export default function Review ({ isInput, review, listingDetails, setListingDet
               multiline
               rows={4}
               fullWidth
+              value={userReview.comment}
               onChange={(e) => {
                 handleChange('comment', e.target.value);
               }}

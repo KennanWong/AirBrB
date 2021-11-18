@@ -8,7 +8,7 @@ TextInput.propTypes = {
   errorStatus: PropTypes.bool,
   errorMsg: PropTypes.string,
   resetError: PropTypes.func,
-  label: PropTypes.label,
+  label: PropTypes.string,
   setState: PropTypes.func,
 }
 
@@ -24,7 +24,7 @@ export default function TextInput ({ errorStatus, errorMsg, resetError, label, s
           error
           helperText={ errorMsg}
         />
-        : <TextField fullWidth label={label} variant="outlined" onChange={(e) => setState(e.target.value)}
+        : <TextField fullWidth label={label} variant="outlined" onChange={(e) => setState(e.target.value)} name={label}
         />
       }
     </Box>

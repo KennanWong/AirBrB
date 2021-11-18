@@ -28,7 +28,7 @@ export const getReviewRating = (reviews) => {
 }
 
 UserRating.propTypes = {
-  listingId: PropTypes.number,
+  listingId: PropTypes.string,
   readOnly: PropTypes.bool,
   details: PropTypes.object,
   setDetails: PropTypes.func,

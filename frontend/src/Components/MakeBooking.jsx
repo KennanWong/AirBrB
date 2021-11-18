@@ -35,7 +35,7 @@ const makeBooking = async (id, booking, setBooking, listingDetails, setListingDe
 }
 
 MakeBooking.propTypes = {
-  id: PropTypes.number,
+  id: PropTypes.string,
   listingDetails: PropTypes.object,
   setListingDetails: PropTypes.func,
 }
