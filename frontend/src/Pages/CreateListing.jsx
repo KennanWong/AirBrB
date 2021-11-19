@@ -94,7 +94,7 @@ export default function CreateListing ({ newListing }) {
     published: false,
   };
 
-  const [details, setDetails] = React.useState(defaultState);
+  const [details, setDetails] = React.useState({ ...defaultState, type: 'House' });
 
   // If not a new listing, we are editing an existing one
   // Fill in existing details from the back end
@@ -193,7 +193,7 @@ export default function CreateListing ({ newListing }) {
             <Grid container spacing={2}>
               <Grid item xs={5}>
                 {toggleUpload
-                  ? <ThumbnailImage>
+                  ? <ThumbnailImage name='placeHolderThumb'>
                       <StyledThumbnail
                         onMouseOver={() => {
                           setToggleUpload(false);
@@ -209,6 +209,7 @@ export default function CreateListing ({ newListing }) {
                       }}
                     >
                       <input
+                        name="thumbUpload"
                         accept="image/*"
                         style={{ display: 'none' }}
                         id="raised-button-file"
@@ -233,7 +234,7 @@ export default function CreateListing ({ newListing }) {
               </Grid>
               <Grid item xs={7}>
                 <DataEnty>
-                  <TextField fullWidth label="Title" value={details.title || ''} onChange={handleChange('title')} variant="standard" />
+                  <TextField fullWidth name='Title' label="Title" value={details.title || ''} onChange={handleChange('title')} variant="standard" />
                 </DataEnty>
                 <br/>
                 <DataEnty>
@@ -252,7 +253,7 @@ export default function CreateListing ({ newListing }) {
                 <List sx={{ width: '90%', bgcolor: 'background.paper' }}>
                   <ListItem>
                     <DataEnty>
-                      <TextField value={details.bathrooms} label="Number of bathrooms" type="number" onChange={handleChange('bathrooms')} variant="standard" />
+                      <TextField name="Bathrooms" value={details.bathrooms} label="Number of bathrooms" type="number" onChange={handleChange('bathrooms')} variant="standard" />
                     </DataEnty>
                   </ListItem>
                   <ListItem>
@@ -260,13 +261,11 @@ export default function CreateListing ({ newListing }) {
                       <FormControl variant="standard" sx={{ minWidth: 120 }}>
                         <InputLabel>Stay Type</InputLabel>
                         <Select
+                          name="StayType"
                           value={details.type}
                           onChange={handleChange('type')}
                           label="Stay Type"
                         >
-                          <MenuItem value="">
-                            <em>None</em>
-                          </MenuItem>
                           <MenuItem value={'House'}>House</MenuItem>
                           <MenuItem value={'Apartment'}>Apartment</MenuItem>
                           <MenuItem value={'Room'}>Room</MenuItem>
@@ -294,6 +293,7 @@ export default function CreateListing ({ newListing }) {
                       <FormControl variant="standard">
                         <InputLabel htmlFor="standard-adornment-amount">Price per night</InputLabel>
                         <Input
+                          name="Price"
                           id="standard-adornment-amount"
                           details={details.price}
                           value={details.price}
@@ -346,7 +346,7 @@ export default function CreateListing ({ newListing }) {
           </Box>
         </Box>
         {newListing
-          ? <SubmitButton enableBtn={enableBtn} details={details} navigate={navigate}/>
+          ? <SubmitButton name="submit" enableBtn={enableBtn} details={details} navigate={navigate}/>
           : <SaveButton enableBtn={enableBtn} listingId={Number(id)} details={details} navigate={navigate}/>
         }
       </Container>

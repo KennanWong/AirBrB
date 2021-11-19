@@ -133,6 +133,7 @@ export default function Register ({ setActiveUser }) {
             </h1>
             <div>
               <TextInput
+                name='name'
                 errorStatus={errorStatus.name}
                 errorMsg={errorMsg.name}
                 resetError={resetError}
@@ -140,12 +141,14 @@ export default function Register ({ setActiveUser }) {
                 setState={setName}
               />
               <TextInput
+                name='email'
                 errorStatus={errorStatus.email}
                 errorMsg={errorMsg.email}
                 resetError={resetError}
                 label='Email'
                 setState={setRegEmail}/>
               <PasswordInput
+                name='password'
                 errorStatus={errorStatus.password}
                 errorMsg={errorMsg.password}
                 resetError={resetError}
@@ -154,15 +157,16 @@ export default function Register ({ setActiveUser }) {
                 setState={setPasswordField}
               />
               <PasswordInput
+                name='confirmPassword'
                 errorStatus={errorStatus.confirmPassword}
                 errorMsg={errorMsg.confirmPassword}
                 resetError={resetError}
-                label='Confirm Password'
+                label='Confirm'
                 passwordField={confirmPassword}
                 setState={setConfirmPassword}/>
             </div>
             <br/>
-            <Button variant="contained" onClick={(e) => submitRegister(name, email, passwordField.password, confirmPassword.password, setActiveUser, navigate) }>Register</Button>
+            <Button label='Submit' variant="contained" onClick={(e) => submitRegister(name, email, passwordField.password, confirmPassword.password, setActiveUser, navigate) }>Register</Button>
           </StyledForm>
           <Divider variant="middle"/>
           <StyledForm>

@@ -6,7 +6,7 @@ import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import Box from '@mui/material/Box';
 
 import PropTypes from 'prop-types';
-import { getUserBooking } from '../Helpers';
+// import { getUserBooking } from '../Helpers';
 
 Calendar.propTypes = {
   isInput: PropTypes.bool,
@@ -40,19 +40,16 @@ export default function Calendar ({ isInput, booking, listingDetails, handleChan
       }
 
       // Check if the date does not coincide with a booking
-      // const safe = checkPreviousBookings(date);
       const bookings = listingDetails.bookings;
-      const userBookings = getUserBooking(listingDetails);
+      // const userBookings = getUserBooking(listingDetails);
       for (let i = 0; i < bookings.length; i++) {
         const booking = bookings[i];
-        for (let j = 0; j < userBookings.length; j++) {
-          if (booking !== userBookings[j] && booking.status === 'accepted') {
-            const dates = booking.dateRange.dates;
-            from = new Date(dates[0]);
-            to = new Date(dates[1]);
-            if (date >= from && date < to) {
-              return true;
-            }
+        if (booking.status === 'accepted') {
+          const dates = booking.dateRange.dates;
+          from = new Date(dates[0]);
+          to = new Date(dates[1]);
+          if (date >= from && date < to) {
+            return true;
           }
         }
       }

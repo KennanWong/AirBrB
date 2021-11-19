@@ -19,10 +19,12 @@ export default function TextInput ({ errorStatus, errorMsg, resetError, label, s
     >
       {errorStatus
         ? <TextField
+          id={{ label } + 'error'}
           fullWidth label={label} variant="outlined"
           onChange={(e) => resetError()}
           error
           helperText={ errorMsg}
+          name={'error'}
         />
         : <TextField fullWidth label={label} variant="outlined" onChange={(e) => setState(e.target.value)} name={label}
         />

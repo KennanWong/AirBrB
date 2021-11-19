@@ -34,7 +34,7 @@ export default function MyListings () {
       <br/>
       <Divider></Divider>
       <br/>
-      <Button variant="outlined" onClick={() => navigate('/createListing')}>
+      <Button label='Create' variant="outlined" onClick={() => navigate('/createListing')}>
         Create new listing.
       </Button>
     </Container>

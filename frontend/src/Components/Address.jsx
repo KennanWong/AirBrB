@@ -22,22 +22,22 @@ export default function Address ({ details, setDetails }) {
   return (
     <Grid container spacing={2}>
       <Grid item xs={12}>
-        <TextField fullWidth label="Street Address" value={address.streetAddress || ''} onChange={handleAddressChange('streetAddress')} variant="standard" />
+        <TextField fullWidth name="Street" label="Street Address" value={address.streetAddress || ''} onChange={handleAddressChange('streetAddress')} variant="standard" />
       </Grid>
       <Grid item xs={12}>
-        <TextField fullWidth label="Apartment" value={address.apartment || ''} onChange={handleAddressChange('apartment')} variant="standard" />
+        <TextField fullWidth name="Apartment" label="Apartment" value={address.apartment || ''} onChange={handleAddressChange('apartment')} variant="standard" />
       </Grid>
       <Grid item xs={7}>
-        <TextField fullWidth label="City" value={address.city || ''} onChange={handleAddressChange('city')} variant="standard" />
+        <TextField fullWidth name="City" label="City" value={address.city || ''} onChange={handleAddressChange('city')} variant="standard" />
       </Grid>
       <Grid item xs={5}>
-        <TextField fullWidth label="Post Code" value={address.postcode || ''} onChange={handleAddressChange('postcode')} variant="standard" />
+        <TextField fullWidth name="PostCode" label="Post Code" value={address.postcode || ''} onChange={handleAddressChange('postcode')} variant="standard" />
       </Grid>
       <Grid item xs={5}>
-      <TextField fullWidth label="State" value={address.state || ''} onChange={handleAddressChange('state')} variant="standard" />
+      <TextField fullWidth name="State" label="State" value={address.state || ''} onChange={handleAddressChange('state')} variant="standard" />
       </Grid>
       <Grid item xs={7}>
-        <TextField fullWidth label="Country" value={address.country || ''} onChange={handleAddressChange('country')} variant="standard" />
+        <TextField fullWidth name="Country" label="Country" value={address.country || ''} onChange={handleAddressChange('country')} variant="standard" />
       </Grid>
     </Grid>
   )

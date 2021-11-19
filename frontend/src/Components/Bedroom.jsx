@@ -36,7 +36,7 @@ export function Bedroom ({ isInput, bedroomNum, listingDetails, setListingDetail
   return (
     <div>
       {isInput
-        ? <BedroomInput bedroomNum={bedroomNum} bedroomDetails={bedroomDetails} listingDetails={listingDetails} setListingDetails={setListingDetails}/>
+        ? <BedroomInput bedroomNum={bedroomNum} listingDetails={listingDetails} setListingDetails={setListingDetails}/>
         : <BedroomDetail bedroomNum={bedroomNum} bedroomDetails={bedroomDetails}/>
       }
     </div>
@@ -49,7 +49,7 @@ BedroomInput.propTypes = {
   setListingDetails: PropTypes.func,
 }
 
-function BedroomInput ({ bedroomNum, listingDetails, setListingDetails }) {
+export function BedroomInput ({ bedroomNum, listingDetails, setListingDetails }) {
   const bed = listingDetails.bedroomsList[bedroomNum - 1];
 
   const handleChange = (prop, value) => {
@@ -79,7 +79,7 @@ function BedroomInput ({ bedroomNum, listingDetails, setListingDetails }) {
       <React.Fragment>
         <CardContent>
           <SpacedFlex>
-            <Flex> Bedroom {bedroomNum}. </Flex>
+            <Flex>Bedroom {bedroomNum}.</Flex>
             <IconButton
               onClick={(e) => {
                 const bedroomsListCpy = listingDetails.bedroomsList;
@@ -92,14 +92,14 @@ function BedroomInput ({ bedroomNum, listingDetails, setListingDetails }) {
             </IconButton>
           </SpacedFlex>
           <SpacedFlex>
-            <TextField value={bed.numBeds} label="Number of beds" type="number" variant="standard" onChange={(e) => handleChange('numBeds', e.target.value)} />
+            <TextField name='numBeds' value={bed.numBeds} label="Number of beds" type="number" variant="standard" onChange={(e) => handleChange('numBeds', e.target.value)} />
             <FormControl variant="standard" sx={{ minWidth: 100 }}>
               <InputLabel> Bed Type </InputLabel>
               <Select
-                labelId="demo-simple-select-label"
+                name="BedType"
+                label="Bed Type"
                 id="demo-simple-select"
                 value={bed.type}
-                label="Age"
                 autoWidth
                 onChange={(e) => {
                   handleChange('type', e.target.value)
@@ -123,7 +123,7 @@ BedroomDetail.propTypes = {
   bedroomDetails: PropTypes.object,
 }
 
-function BedroomDetail ({ bedroomNum, bedroomDetails }) {
+export function BedroomDetail ({ bedroomNum, bedroomDetails }) {
   return (
     <Card sx={{ width: 200, height: 150 }}>
       <React.Fragment>
@@ -131,7 +131,7 @@ function BedroomDetail ({ bedroomNum, bedroomDetails }) {
           <BedroomIcons bedroomDetails={bedroomDetails}/>
           Bedroom {bedroomNum}.
           <br/>
-          { (bedroomDetails.numBeds === '1')
+          { (Number(bedroomDetails.numBeds) === Number('1'))
             ? <div> {bedroomDetails.numBeds} {bedroomDetails.type} bed. </div>
             : <div> {bedroomDetails.numBeds} {bedroomDetails.type} beds. </div>
           }
@@ -187,7 +187,7 @@ export function AddBedroom ({ listingDetails, setListingDetails }) {
   }
   return (
     <Card sx={{ width: 250, height: 200 }}>
-      <CardActionArea sx={{ width: 250, height: 200 }} onClick={() => addBedroomFunc()}>
+      <CardActionArea name="AddBedroom" sx={{ width: 250, height: 200 }} onClick={() => addBedroomFunc()}>
         <CardContent>
           <Typography gutterBottom variant="body1" sx={{ textAlign: 'center' }}>
             Add a new Bedroom
