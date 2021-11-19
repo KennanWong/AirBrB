@@ -92,7 +92,7 @@ export default function Calendar ({ isInput, booking, listingDetails, handleChan
         inputFormat={'dd/MM/yyyy'}
         shouldDisableDate={shouldDisableDate}
         error={false}
-        disablePast
+        disablePast={!isInput}
       />
     </LocalizationProvider>
   );

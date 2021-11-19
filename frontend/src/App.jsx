@@ -68,11 +68,11 @@ function Header ({ activeUser, setActiveUser }) {
   const navigate = useNavigate();
   return (
     <HeaderStyle>
-      <div>
-        <h1>
+      <Button sx={{ textTransform: 'none', color: '#000000' }} onClick={() => navigate('/')}>
+        <h1 style={{ margin: '0px' }}>
           AirBrb.
         </h1>
-      </div>
+      </Button>
       <div>
         <Button
           id="basic-button"

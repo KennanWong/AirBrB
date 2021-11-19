@@ -28,13 +28,12 @@ export const getReviewRating = (reviews) => {
 }
 
 UserRating.propTypes = {
-  listingId: PropTypes.string,
   readOnly: PropTypes.bool,
   details: PropTypes.object,
   setDetails: PropTypes.func,
 }
 
-export default function UserRating ({ listingId, readOnly, details, setDetails }) {
+export default function UserRating ({ readOnly, details, setDetails }) {
   const [communityValue, setCommunityValue] = React.useState(getReviewRating(details.reviews));
 
   React.useEffect(() => {
