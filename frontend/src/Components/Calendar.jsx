@@ -71,6 +71,7 @@ export default function Calendar ({ isInput, booking, listingDetails, handleChan
   return (
     <LocalizationProvider dateAdapter={AdapterDateFns}>
       <DateRangePicker
+        name="Dates"
         startText={startText}
         endText={endText}
         value={booking.dates}

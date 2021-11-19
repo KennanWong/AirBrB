@@ -90,11 +90,11 @@ export default function Login ({ setActiveUser }) {
               Welcome back to AirBrb.
             </h1>
             <div>
-              <TextInput errorStatus={errorStatus.email} errorMsg={errorMsg.email} resetError={resetError} label={'Email'} setState={setEmail}/>
-              <PasswordInput errorStatus={errorStatus.password} errorMsg={errorMsg.password} resetError={resetError} label='Password' passwordField={passwordField} setState={setPasswordField}/>
+              <TextInput name="Email" errorStatus={errorStatus.email} errorMsg={errorMsg.email} resetError={resetError} label={'Email'} setState={setEmail}/>
+              <PasswordInput name="Password" errorStatus={errorStatus.password} errorMsg={errorMsg.password} resetError={resetError} label='Password' passwordField={passwordField} setState={setPasswordField}/>
             </div>
             <br/>
-            <Button variant="contained" onClick={(e) => submitLogin(email, passwordField.password, setErrorMsg, setErrorStatus, setActiveUser, navigate) }>Login</Button>
+            <Button name="Submit" variant="contained" onClick={(e) => submitLogin(email, passwordField.password, setErrorMsg, setErrorStatus, setActiveUser, navigate) }>Login</Button>
           </StyledForm>
           <Divider variant="middle"/>
           <StyledForm>

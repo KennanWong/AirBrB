@@ -117,10 +117,8 @@ export const getListingDetails = async (id, listingDetails, setListingDetails) =
       const tmp = ret.bookings;
       console.log(tmp);
       for (let i = 0; i < tmp.length; i++) {
-        console.log(tmp[i].listingId, 'vs', id);
         if (Number(tmp[i].listingId) === Number(id)) {
           bookings.push(tmp[i]);
-          console.log(bookings);
         }
       }
     }
@@ -176,13 +174,11 @@ export const sendListingDetails = async (newListing, listingId, details, navigat
     }
   }
   try {
-    let ret;
     if (newListing) {
-      ret = await apiFetch('POST', '/listings/new', getToken(), body);
+      await apiFetch('POST', '/listings/new', getToken(), body);
     } else {
-      ret = await apiFetch('PUT', `/listings/${listingId}`, getToken(), body);
+      await apiFetch('PUT', `/listings/${listingId}`, getToken(), body);
     }
-    console.log(ret);
     if (navigate !== null) {
       navigate('/myListings');
     }
@@ -192,14 +188,12 @@ export const sendListingDetails = async (newListing, listingId, details, navigat
 }
 
 export const getListings = async (myListings, listingsList, setListingsList, params) => {
-  console.log('Getting listings')
   const ret = await apiFetch('GET', '/listings', null, {});
   const curListings = ret.listings
   listingsList = [];
   for (const item in curListings) {
     const listing = curListings[item];
     if (myListings) {
-      console.log(listing);
       if (listing.owner === getEmail()) {
         listingsList.push(listing);
       }
@@ -207,7 +201,6 @@ export const getListings = async (myListings, listingsList, setListingsList, par
       const details = await getListingDetails(listing.id, null, null);
       if (details.published) {
         if (params === null) {
-          console.log('pushing to list')
           listingsList.push(listing);
         } else {
           if (filter(details, params)) {
@@ -222,7 +215,6 @@ export const getListings = async (myListings, listingsList, setListingsList, par
 }
 
 export const filter = (details, params) => {
-  console.log('filtering: ', details.title);
   const search = params.search.toLowerCase();
   let pass = false;
 
@@ -236,7 +228,6 @@ export const filter = (details, params) => {
     }
     const ammenities = details.metadata.ammenities;
     for (const item in ammenities) {
-      console.log(ammenities[item]);
       if (ammenities[item].toLowerCase().includes(search)) {
         pass = true;
       }
@@ -287,8 +278,6 @@ export const filter = (details, params) => {
     if (dates[0] !== null && dates[1] !== null) {
       const availability = details.availability;
       for (let i = 0; i < availability.length; i++) {
-        console.log(dates);
-        console.log(availability);
         if (dates[0] >= new Date(availability[i][0]) && dates[1] <= new Date(availability[i][1])) {
           console.log('Match availability criteria');
           pass = true;
@@ -330,16 +319,13 @@ export const dynamicSort = (property) => {
 export const getUserBooking = (listingDetails) => {
   const bookings = listingDetails.bookings;
   const userBooking = [];
-  console.log('bookings: ', bookings);
   if (bookings !== null) {
     for (let i = 0; i < bookings.length; i++) {
-      console.log(bookings[i]);
       if (bookings[i].owner === getEmail()) {
         userBooking.push(bookings[i]);
       }
     }
   }
-  console.log('userBookings', userBooking);
   return userBooking;
 }
 

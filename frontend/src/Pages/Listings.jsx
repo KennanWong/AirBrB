@@ -13,11 +13,17 @@ import {
 } from '../Helpers';
 import Listing from '../Components/Listing';
 import {
-  ListingsBar, SpacedFlex
+  ListingsBar, ListingsBarMobile, SpacedFlex
 } from '../Components/Styles';
 import SearchModal from '../Components/SearchModal';
 
-export default function Listings () {
+import PropTypes from 'prop-types';
+
+Listings.propTypes = {
+  mobileView: PropTypes.bool,
+}
+
+export default function Listings ({ mobileView }) {
   const [listingsList, setListingsList] = React.useState([]);
 
   const [searchString, setSearchString] = React.useState('')
@@ -64,11 +70,18 @@ export default function Listings () {
       <Divider/>
       <br/>
       <Box sx={{ flexGrow: 1 }}>
-        <ListingsBar>
-          {listingsList.map((listing, key) => {
-            return <Listing publicView={true} details={listing} key={key}></Listing>
-          })}
-        </ListingsBar>
+        {(mobileView)
+          ? <ListingsBarMobile>
+              {listingsList.map((listing, key) => {
+                return <Listing publicView={true} details={listing} key={key}></Listing>
+              })}
+            </ListingsBarMobile>
+          : <ListingsBar>
+              {listingsList.map((listing, key) => {
+                return <Listing publicView={true} details={listing} key={key}></Listing>
+              })}
+            </ListingsBar>
+        }
         <br/>
       </Box>
       <br/>

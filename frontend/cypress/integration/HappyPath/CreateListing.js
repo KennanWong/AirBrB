@@ -1,20 +1,11 @@
 /* eslint-disable */
 import 'cypress-file-upload';
+context('Create Listing flow - happy path', () => {
+  const email = 'Sammy@email.com';
+  const password = 'password';
 
-context ('Register flow - happy path', () => {
   beforeEach(() => {
-    cy.visit('localhost:3000/register');
-  });
-
-  it ('Successfuly register', () => {
-    const name = 'Kevin';
-    const email = 'Kevin@email.com';
-    const password = 'password';
-
-    cy.get(`input[name=Name]`)
-      .focus()
-      .type(name);
-    
+    cy.visit('localhost:3000/login');
     cy.get('input[name=Email')
       .focus()
       .type(email);
@@ -23,25 +14,17 @@ context ('Register flow - happy path', () => {
       .focus()
       .type(password);
 
-    cy.get('input[name=Confirm]')
-      .focus()
-      .type(password);
-
-    cy.get('button[label=Submit]')
+    cy.get('button[name=Submit]')
       .click()
     
-  })
-});
 
-context('Create Listing flow - happy path', () => {
-  beforeEach(() => {
     cy.visit('localhost:3000/myListings');
     cy.get('button[label=Create]')
       .click()
   });
 
-  it ('Scuessfully create listing', () => {
-    const title = 'A listing';
+  it ('Sucessfully create listing', () => {
+    const title = 'SammysHome';
     const streetAddress = '1 Street Road';
     const city = 'City';
     const state = 'NSW';
@@ -96,5 +79,7 @@ context('Create Listing flow - happy path', () => {
       .focus()
       .type(price)
 
+    cy.get('button[name=submit]')
+      .click()
   });
 })

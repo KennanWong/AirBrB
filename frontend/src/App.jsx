@@ -1,4 +1,3 @@
-/* eslint-disable react/prop-types */
 import React from 'react';
 import './App.css';
 import {
@@ -25,6 +24,8 @@ import Listings from './Pages/Listings';
 import ShowListing from './Pages/ShowListing';
 import ManageBookings from './Pages/ManageBookings';
 
+import PropTypes from 'prop-types';
+
 const isUserActive = () => {
   console.log('token: ', getToken())
   if (getToken() != null) {
@@ -36,9 +37,25 @@ const isUserActive = () => {
 
 export default function App () {
   const [activeUser, setActiveUser] = React.useState(isUserActive());
+  const [mobileView, setMobileView] = React.useState(window.innerWidth <= 420);
+
+  window.addEventListener('resize', () => {
+    const state = (window.innerWidth <= 700)
+    console.log('mobileview: ', state);
+    console.log('mobileViewState', mobileView);
+
+    if (mobileView !== state) {
+      setMobileView(state);
+    } else {
+      console.log('no change');
+    }
+  });
+
+  console.log('window reload');
+
   return (
     <Container>
-      <Body activeUser={activeUser} setActiveUser={setActiveUser}/>
+      <Body mobileView={mobileView} activeUser={activeUser} setActiveUser={setActiveUser}/>
     </Container>
   );
 }
@@ -48,6 +65,11 @@ const HeaderStyle = styled('div')({
   justifyContent: 'space-between',
   alignItems: 'center',
 });
+
+Header.propTypes = {
+  activeUser: PropTypes.bool,
+  setActiveUser: PropTypes.func,
+}
 
 function Header ({ activeUser, setActiveUser }) {
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -75,6 +97,7 @@ function Header ({ activeUser, setActiveUser }) {
       </Button>
       <div>
         <Button
+          name="Menu"
           id="basic-button"
           aria-controls="basic-menu"
           aria-haspopup="true"
@@ -95,6 +118,7 @@ function Header ({ activeUser, setActiveUser }) {
           {activeUser
             ? <div>
                 <MenuItem
+                  name={'myListings'}
                   onClick={() => {
                     handleClose();
                     navigate('/myListings');
@@ -102,10 +126,11 @@ function Header ({ activeUser, setActiveUser }) {
                 >
                   My Listings
                 </MenuItem>
-                <MenuItem onClick={(e) => logoutFn(navigate)}>Logout</MenuItem>
+                <MenuItem name={'logout'} onClick={(e) => logoutFn(navigate)}>Logout</MenuItem>
               </div>
             : <div>
                 <MenuItem
+                  name={'login'}
                   onClick={() => {
                     handleClose();
                     navigate('/login');
@@ -114,6 +139,7 @@ function Header ({ activeUser, setActiveUser }) {
                   Login
                 </MenuItem>
                 <MenuItem
+                  name={'register'}
                   onClick={() => {
                     handleClose();
                     navigate('/register')
@@ -124,6 +150,7 @@ function Header ({ activeUser, setActiveUser }) {
               </div>
           }
           <MenuItem
+            name={'home'}
             onClick={() => {
               handleClose();
               navigate('/');
@@ -137,7 +164,13 @@ function Header ({ activeUser, setActiveUser }) {
   );
 }
 
-function Body ({ activeUser, setActiveUser }) {
+Body.propTypes = {
+  mobileView: PropTypes.bool,
+  activeUser: PropTypes.bool,
+  setActiveUser: PropTypes.func,
+}
+
+function Body ({ mobileView, activeUser, setActiveUser }) {
   return (
     <div>
       <BrowserRouter>
@@ -147,11 +180,11 @@ function Body ({ activeUser, setActiveUser }) {
           <Route path="/register" element={<Register setActiveUser={setActiveUser}/>}/>
           <Route exact path="/" element={<Navigate replace to="/listings"/>}>
           </Route>
-          <Route path="/listings" element={<Listings/>}/>
-          <Route path="/myListings" element={<MyListings/>}/>
-          <Route path="/createListing" element={<CreateListing newListing={true}/>}/>
-          <Route path="/listing/:id" element={<ShowListing/>}/>
-          <Route path="/editListing/:id" element={<CreateListing newListing={false}/>}/>
+          <Route path="/listings" element={<Listings mobileView={mobileView}/>}/>
+          <Route path="/myListings" element={<MyListings mobileView={mobileView}/>}/>
+          <Route path="/createListing" element={<CreateListing mobileView={mobileView} newListing={true}/>}/>
+          <Route path="/listing/:id" element={<ShowListing mobileView={mobileView}/>}/>
+          <Route path="/editListing/:id" element={<CreateListing mobileView={mobileView} newListing={false}/>}/>
           <Route path="/manageBookings/:id" element={<ManageBookings/>}/>
         </Routes>
       </BrowserRouter>

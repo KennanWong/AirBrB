@@ -53,6 +53,12 @@ export const ListingsBar = styled.div`
   flex-wrap: wrap;
 `;
 
+export const ListingsBarMobile = styled.div`
+  display: flex;
+  gap: 15px;
+  flex-direction: column;
+`;
+
 export const SpacedFlex = styled.div`
   display: flex;
   justify-content: space-between;

@@ -18,11 +18,12 @@ import { CentredFlex } from './Styles';
 import PropTypes from 'prop-types';
 
 Listing.propTypes = {
+  index: PropTypes.number,
   publicView: PropTypes.bool,
   details: PropTypes.object,
 }
 
-export default function Listing ({ publicView, details }) {
+export default function Listing ({ index, publicView, details }) {
   const [listingDetails, setListingDetails] = React.useState({
     title: '',
     address: '',
@@ -55,7 +56,7 @@ export default function Listing ({ publicView, details }) {
   return (
     <div>
       <Card sx={{ minWidth: 345, border: '3px solid #f0f0f0', borderRadius: '15px' }}>
-        <CardActionArea onClick={() => navigateTo(null)}>
+        <CardActionArea name={`listing-${index}`} onClick={() => navigateTo(null)}>
           { (listingDetails.thumbnail !== '')
             ? <CardMedia
                 component="img"

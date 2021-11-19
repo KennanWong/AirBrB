@@ -3,14 +3,20 @@ import Box from '@mui/material/Box';
 import { Container, Divider } from '@mui/material';
 import Button from '@mui/material/Button';
 
-import { ListingsBar } from '../Components/Styles';
+import { ListingsBar, ListingsBarMobile } from '../Components/Styles';
 import {
   getListings,
 } from '../Helpers';
 import Listing from '../Components/Listing';
 import { useNavigate } from 'react-router';
 
-export default function MyListings () {
+import PropTypes from 'prop-types';
+
+MyListings.propTypes = {
+  mobileView: PropTypes.bool
+}
+
+export default function MyListings ({ mobileView }) {
   const [listingsList, setListingsList] = React.useState([]);
 
   const navigate = useNavigate();
@@ -25,11 +31,18 @@ export default function MyListings () {
       <Divider/>
       <br/>
       <Box sx={{ flexGrow: 1 }}>
-        <ListingsBar>
-          {listingsList.map((listing, key) => {
-            return <Listing publicView={false} details={listing} key={key}/>
-          })}
-        </ListingsBar>
+        {(mobileView)
+          ? <ListingsBarMobile>
+              {listingsList.map((listing, key) => {
+                return <Listing publicView={true} details={listing} key={key}></Listing>
+              })}
+            </ListingsBarMobile>
+          : <ListingsBar>
+              {listingsList.map((listing, key) => {
+                return <Listing publicView={true} details={listing} key={key}></Listing>
+              })}
+            </ListingsBar>
+        }
       </Box>
       <br/>
       <Divider></Divider>

@@ -7,6 +7,7 @@ import {
   Divider,
   FormHelperText,
   IconButton,
+  Stack,
 } from '@mui/material';
 import Input from '@mui/material/Input';
 import Box from '@mui/material/Box';
@@ -69,10 +70,11 @@ export function NumberOptions ({ num }) {
 }
 
 CreateListing.propTypes = {
+  mobileView: PropTypes.bool,
   newListing: PropTypes.bool,
 }
 
-export default function CreateListing ({ newListing }) {
+export default function CreateListing ({ mobileView, newListing }) {
   const defaultState = {
     title: '',
     address: {
@@ -168,188 +170,337 @@ export default function CreateListing ({ newListing }) {
     setDetails({ ...details, availability: availabilityList });
   }
 
+  console.log('mobileview in create listing: ', mobileView);
   const navigate = useNavigate();
   return (
     <div>
-      <Container>
-        <SpacedFlex>
-          <Button
-            variant='outlined'
-            startIcon={<DeleteIcon/>}
-            disabled={newListing}
-            onClick={() => onDelete(details.id, navigate)}
-          >
-            Delete
-          </Button>
-          <FormControlLabel
-            control={<Switch checked={details.published} onChange={handleChange('published')}/>}
-            label="Publish Listing"
-            labelPlacement='start'
-            disabled={newListing}
-          />
-        </SpacedFlex>
-        <Box sx={{ my: 3, mx: 2 }}>
-          <Box sx={{ flexGrow: 1 }}>
-            <Grid container spacing={2}>
-              <Grid item xs={5}>
-                {toggleUpload
-                  ? <ThumbnailImage name='placeHolderThumb'>
-                      <StyledThumbnail
-                        onMouseOver={() => {
-                          setToggleUpload(false);
-                          console.log('hovering');
-                        }}
-                        src={details.thumbnail}
-                      />
-                    </ThumbnailImage>
-                  : <ThumbnailImage
-                      onMouseOut={() => {
-                        setToggleUpload(true);
-                        console.log('moved away');
+      {(mobileView)
+        ? <Container>
+            <SpacedFlex>
+              <Button
+                variant='outlined'
+                startIcon={<DeleteIcon/>}
+                disabled={newListing}
+                onClick={() => onDelete(details.id, navigate)}
+              >
+                Delete
+              </Button>
+              <FormControlLabel
+                control={<Switch checked={details.published} onChange={handleChange('published')}/>}
+                label="Publish Listing"
+                labelPlacement='start'
+                disabled={newListing}
+              />
+            </SpacedFlex>
+            <Stack spacing={1}>
+              {toggleUpload
+                ? <ThumbnailImage name='placeHolderThumb'>
+                    <StyledThumbnail
+                      onMouseOver={() => {
+                        setToggleUpload(false);
+                        console.log('hovering');
                       }}
-                    >
-                      <input
-                        name="thumbUpload"
-                        accept="image/*"
-                        style={{ display: 'none' }}
-                        id="raised-button-file"
-                        multiple
-                        type="file"
-                        value={''}
-                        onChange={async (e) => {
-                          setDetails({ ...details, thumbnail: await fileToDataUrl(e.target.files[0]) })
-                          setToggleUpload(true);
-                        }}
-                      />
-                      <label htmlFor="raised-button-file">
-                        <Button
-                          variant="raised"
-                          component="span"
-                        >
-                          Upload
-                        </Button>
-                      </label>
-                    </ThumbnailImage>
-                }
-              </Grid>
-              <Grid item xs={7}>
-                <DataEnty>
-                  <TextField fullWidth name='Title' label="Title" value={details.title || ''} onChange={handleChange('title')} variant="standard" />
-                </DataEnty>
-                <br/>
-                <DataEnty>
-                  <Address details={details} setDetails={setDetails}/>
-                  {/* <TextField fullWidth label="Address" value={details.adress || ''} onChange={handleChange('address')} variant="standard" /> */}
-                </DataEnty>
-              </Grid>
-            </Grid>
-          </Box>
-        </Box>
-        <Divider variant="middle"></Divider>
-        <Box sx={{ my: 3, mx: 2 }} fullWidth>
-          <Box sx={{ flexGrow: 1 }}>
-            <Grid container >
-              <Grid item xs={8}>
-                <List sx={{ width: '90%', bgcolor: 'background.paper' }}>
-                  <ListItem>
-                    <DataEnty>
-                      <TextField name="Bathrooms" value={details.bathrooms} label="Number of bathrooms" type="number" onChange={handleChange('bathrooms')} variant="standard" />
-                    </DataEnty>
-                  </ListItem>
-                  <ListItem>
-                    <DataEnty>
-                      <FormControl variant="standard" sx={{ minWidth: 120 }}>
-                        <InputLabel>Stay Type</InputLabel>
-                        <Select
-                          name="StayType"
-                          value={details.type}
-                          onChange={handleChange('type')}
-                          label="Stay Type"
-                        >
-                          <MenuItem value={'House'}>House</MenuItem>
-                          <MenuItem value={'Apartment'}>Apartment</MenuItem>
-                          <MenuItem value={'Room'}>Room</MenuItem>
-                        </Select>
-                      </FormControl>
-                    </DataEnty>
-                  </ListItem>
-                  <ListItem>
-                    <DataEnty>
-                      <h4>Bedrooms</h4>
-                      <Bedrooms isInput={true} bedroomNum={details.bedroomsList.length} listingDetails={details} setListingDetails={setDetails}/>
-                    </DataEnty>
-                  </ListItem>
-                  <ListItem>
-                    <DataEnty>
-                      <Ammenities isInput={true} details={details} setDetails={setDetails}/>
-                    </DataEnty>
-                  </ListItem>
-                </List>
-              </Grid>
-              <Grid item xs={4}>
-                <List>
-                  <ListItem>
-                    <DataEnty>
-                      <FormControl variant="standard">
-                        <InputLabel htmlFor="standard-adornment-amount">Price per night</InputLabel>
-                        <Input
-                          name="Price"
-                          id="standard-adornment-amount"
-                          details={details.price}
-                          value={details.price}
-                          onChange={handleChange('price')}
-                          startAdornment={<InputAdornment position="start">$</InputAdornment>}
-                          type="number"
-                        />
-                      </FormControl>
-                      {(!newListing)
-                        ? <div>
-                            <br/>
-                            <Divider/>
-                            <br/>
-                            <List sx={{ padding: '0px' }}>
-                            {details.availability.map((value, key) => {
-                              return <ListItem key={key}>
-                                        <div>
-                                          <Availability index={key} listingDetails={details} setListingDetails={setDetails} published={details.published}/>
-                                          {(details.published)
-                                            ? <div></div>
-                                            : <CentredFlex>
-                                                <IconButton onClick={() => removeAvailability(key)}>
-                                                  <DeleteIcon/>
-                                                </IconButton>
-                                              </CentredFlex>
-                                          }
-                                        </div>
-                                      </ListItem>
-                            })}
-                            </List>
-                            <br/>
-                            <Divider/>
-                            <br/>
-                            { (details.published)
-                              ? <CentredFlex>
-                                  <Button fullWidth variant="contained" disabled> Unpublish To Modify</Button>
-                                </CentredFlex>
-                              : <CentredFlex>
-                                  <Button variant="contained" onClick={() => addAvailability()}>Add Availability</Button>
-                                </CentredFlex>
-                            }
-                          </div>
-                        : <div></div>
+                      src={details.thumbnail}
+                    />
+                  </ThumbnailImage>
+                : <ThumbnailImage
+                    onMouseOut={() => {
+                      setToggleUpload(true);
+                      console.log('moved away');
+                    }}
+                  >
+                    <input
+                      name="thumbUpload"
+                      accept="image/*"
+                      style={{ display: 'none' }}
+                      id="raised-button-file"
+                      multiple
+                      type="file"
+                      value={''}
+                      onChange={async (e) => {
+                        setDetails({ ...details, thumbnail: await fileToDataUrl(e.target.files[0]) })
+                        setToggleUpload(true);
+                      }}
+                    />
+                    <label htmlFor="raised-button-file">
+                      <Button
+                        variant="raised"
+                        component="span"
+                      >
+                        Upload
+                      </Button>
+                    </label>
+                  </ThumbnailImage>
+              }
+              <DataEnty>
+                <TextField fullWidth name='Title' label="Title" value={details.title || ''} onChange={handleChange('title')} variant="standard" />
+              </DataEnty>
+              <DataEnty>
+                <Address details={details} setDetails={setDetails}/>
+                {/* <TextField fullWidth label="Address" value={details.adress || ''} onChange={handleChange('address')} variant="standard" /> */}
+              </DataEnty>
+              <Divider variant="middle"></Divider>
+              <DataEnty>
+                <TextField name="Bathrooms" value={details.bathrooms} label="Number of bathrooms" type="number" onChange={handleChange('bathrooms')} variant="standard" />
+              </DataEnty>
+              <DataEnty>
+                <FormControl variant="standard" sx={{ minWidth: 120 }}>
+                  <InputLabel>Stay Type</InputLabel>
+                  <Select
+                    name="StayType"
+                    value={details.type}
+                    onChange={handleChange('type')}
+                    label="Stay Type"
+                  >
+                    <MenuItem value={'House'}>House</MenuItem>
+                    <MenuItem value={'Apartment'}>Apartment</MenuItem>
+                    <MenuItem value={'Room'}>Room</MenuItem>
+                  </Select>
+                </FormControl>
+              </DataEnty>
+              <DataEnty>
+                <h4>Bedrooms</h4>
+                <Bedrooms isInput={true} bedroomNum={details.bedroomsList.length} listingDetails={details} setListingDetails={setDetails}/>
+              </DataEnty>
+              <DataEnty>
+                <Ammenities isInput={true} details={details} setDetails={setDetails}/>
+              </DataEnty>
+              <DataEnty>
+                <FormControl variant="standard">
+                  <InputLabel htmlFor="standard-adornment-amount">Price per night</InputLabel>
+                  <Input
+                    name="Price"
+                    id="standard-adornment-amount"
+                    details={details.price}
+                    value={details.price}
+                    onChange={handleChange('price')}
+                    startAdornment={<InputAdornment position="start">$</InputAdornment>}
+                    type="number"
+                  />
+                </FormControl>
+                {(!newListing)
+                  ? <div>
+                      <br/>
+                      <Divider/>
+                      <br/>
+                      <List sx={{ padding: '0px' }}>
+                      {details.availability.map((value, key) => {
+                        return <ListItem key={key}>
+                                  <div>
+                                    <Availability index={key} listingDetails={details} setListingDetails={setDetails} published={details.published}/>
+                                    {(details.published)
+                                      ? <div></div>
+                                      : <CentredFlex>
+                                          <IconButton onClick={() => removeAvailability(key)}>
+                                            <DeleteIcon/>
+                                          </IconButton>
+                                        </CentredFlex>
+                                    }
+                                  </div>
+                                </ListItem>
+                      })}
+                      </List>
+                      <br/>
+                      <Divider/>
+                      <br/>
+                      { (details.published)
+                        ? <CentredFlex>
+                            <Button fullWidth variant="contained" disabled> Unpublish To Modify</Button>
+                          </CentredFlex>
+                        : <CentredFlex>
+                            <Button name="addAvailability" variant="contained" onClick={() => addAvailability()}>Add Availability</Button>
+                          </CentredFlex>
                       }
+                    </div>
+                  : <div></div>
+                }
+              </DataEnty>
+              {newListing
+                ? <SubmitButton enableBtn={enableBtn} details={details} navigate={navigate}/>
+                : <SaveButton enableBtn={enableBtn} listingId={Number(id)} details={details} navigate={navigate}/>
+              }
+            </Stack>
+          </Container>
+        : <Container>
+            <SpacedFlex>
+              <Button
+                variant='outlined'
+                startIcon={<DeleteIcon/>}
+                disabled={newListing}
+                onClick={() => onDelete(details.id, navigate)}
+              >
+                Delete
+              </Button>
+              <FormControlLabel
+                control={<Switch checked={details.published} onChange={handleChange('published')}/>}
+                label="Publish Listing"
+                labelPlacement='start'
+                disabled={newListing}
+              />
+            </SpacedFlex>
+            <Box sx={{ my: 3, mx: 2 }}>
+              <Box sx={{ flexGrow: 1 }}>
+                <Grid container spacing={2}>
+                  <Grid item xs={5}>
+                    {toggleUpload
+                      ? <ThumbnailImage name='placeHolderThumb'>
+                          <StyledThumbnail
+                            onMouseOver={() => {
+                              setToggleUpload(false);
+                              console.log('hovering');
+                            }}
+                            src={details.thumbnail}
+                          />
+                        </ThumbnailImage>
+                      : <ThumbnailImage
+                          onMouseOut={() => {
+                            setToggleUpload(true);
+                            console.log('moved away');
+                          }}
+                        >
+                          <input
+                            name="thumbUpload"
+                            accept="image/*"
+                            style={{ display: 'none' }}
+                            id="raised-button-file"
+                            multiple
+                            type="file"
+                            value={''}
+                            onChange={async (e) => {
+                              setDetails({ ...details, thumbnail: await fileToDataUrl(e.target.files[0]) })
+                              setToggleUpload(true);
+                            }}
+                          />
+                          <label htmlFor="raised-button-file">
+                            <Button
+                              variant="raised"
+                              component="span"
+                            >
+                              Upload
+                            </Button>
+                          </label>
+                        </ThumbnailImage>
+                    }
+                  </Grid>
+                  <Grid item xs={7}>
+                    <DataEnty>
+                      <TextField fullWidth name='Title' label="Title" value={details.title || ''} onChange={handleChange('title')} variant="standard" />
                     </DataEnty>
-                  </ListItem>
-                </List>
-              </Grid>
-            </Grid>
-          </Box>
-        </Box>
-        {newListing
-          ? <SubmitButton name="submit" enableBtn={enableBtn} details={details} navigate={navigate}/>
-          : <SaveButton enableBtn={enableBtn} listingId={Number(id)} details={details} navigate={navigate}/>
-        }
-      </Container>
+                    <br/>
+                    <DataEnty>
+                      <Address details={details} setDetails={setDetails}/>
+                      {/* <TextField fullWidth label="Address" value={details.adress || ''} onChange={handleChange('address')} variant="standard" /> */}
+                    </DataEnty>
+                  </Grid>
+                </Grid>
+              </Box>
+            </Box>
+            <Divider variant="middle"></Divider>
+            <Box sx={{ my: 3, mx: 2 }} fullWidth>
+              <Box sx={{ flexGrow: 1 }}>
+                <Grid container >
+                  <Grid item xs={8}>
+                    <List sx={{ width: '90%', bgcolor: 'background.paper' }}>
+                      <ListItem>
+                        <DataEnty>
+                          <TextField name="Bathrooms" value={details.bathrooms} label="Number of bathrooms" type="number" onChange={handleChange('bathrooms')} variant="standard" />
+                        </DataEnty>
+                      </ListItem>
+                      <ListItem>
+                        <DataEnty>
+                          <FormControl variant="standard" sx={{ minWidth: 120 }}>
+                            <InputLabel>Stay Type</InputLabel>
+                            <Select
+                              name="StayType"
+                              value={details.type}
+                              onChange={handleChange('type')}
+                              label="Stay Type"
+                            >
+                              <MenuItem value={'House'}>House</MenuItem>
+                              <MenuItem value={'Apartment'}>Apartment</MenuItem>
+                              <MenuItem value={'Room'}>Room</MenuItem>
+                            </Select>
+                          </FormControl>
+                        </DataEnty>
+                      </ListItem>
+                      <ListItem>
+                        <DataEnty>
+                          <h4>Bedrooms</h4>
+                          <Bedrooms isInput={true} bedroomNum={details.bedroomsList.length} listingDetails={details} setListingDetails={setDetails}/>
+                        </DataEnty>
+                      </ListItem>
+                      <ListItem>
+                        <DataEnty>
+                          <Ammenities isInput={true} details={details} setDetails={setDetails}/>
+                        </DataEnty>
+                      </ListItem>
+                    </List>
+                  </Grid>
+                  <Grid item xs={4}>
+                    <List>
+                      <ListItem>
+                        <DataEnty>
+                          <FormControl variant="standard">
+                            <InputLabel htmlFor="standard-adornment-amount">Price per night</InputLabel>
+                            <Input
+                              name="Price"
+                              id="standard-adornment-amount"
+                              details={details.price}
+                              value={details.price}
+                              onChange={handleChange('price')}
+                              startAdornment={<InputAdornment position="start">$</InputAdornment>}
+                              type="number"
+                            />
+                          </FormControl>
+                          {(!newListing)
+                            ? <div>
+                                <br/>
+                                <Divider/>
+                                <br/>
+                                <List sx={{ padding: '0px' }}>
+                                {details.availability.map((value, key) => {
+                                  return <ListItem key={key}>
+                                            <div>
+                                              <Availability index={key} listingDetails={details} setListingDetails={setDetails} published={details.published}/>
+                                              {(details.published)
+                                                ? <div></div>
+                                                : <CentredFlex>
+                                                    <IconButton onClick={() => removeAvailability(key)}>
+                                                      <DeleteIcon/>
+                                                    </IconButton>
+                                                  </CentredFlex>
+                                              }
+                                            </div>
+                                          </ListItem>
+                                })}
+                                </List>
+                                <br/>
+                                <Divider/>
+                                <br/>
+                                { (details.published)
+                                  ? <CentredFlex>
+                                      <Button fullWidth variant="contained" disabled> Unpublish To Modify</Button>
+                                    </CentredFlex>
+                                  : <CentredFlex>
+                                      <Button name="addAvailability" variant="contained" onClick={() => addAvailability()}>Add Availability</Button>
+                                    </CentredFlex>
+                                }
+                              </div>
+                            : <div></div>
+                          }
+                        </DataEnty>
+                      </ListItem>
+                    </List>
+                  </Grid>
+                </Grid>
+              </Box>
+            </Box>
+            {newListing
+              ? <SubmitButton enableBtn={enableBtn} details={details} navigate={navigate}/>
+              : <SaveButton enableBtn={enableBtn} listingId={Number(id)} details={details} navigate={navigate}/>
+            }
+          </Container>
+      }
     </div>
   )
 }
@@ -364,7 +515,7 @@ function SubmitButton ({ enableBtn, details, navigate }) {
   return (
     <div>
       {enableBtn
-        ? <Button variant="contained" onClick={(e) => sendListingDetails(true, null, details, navigate)}> Submit </Button>
+        ? <Button name="submit" variant="contained" onClick={(e) => sendListingDetails(true, null, details, navigate)}> Submit </Button>
         : <div>
             <Button variant="contained" disabled> Submit </Button>
             <FormHelperText error>
@@ -387,7 +538,7 @@ function SaveButton ({ enableBtn, listingId, details, navigate }) {
   return (
     <div>
       {enableBtn
-        ? <Button variant="contained" onClick={(e) => sendListingDetails(false, listingId, details, navigate)}> Save Changes </Button>
+        ? <Button name='Save' variant="contained" onClick={(e) => sendListingDetails(false, listingId, details, navigate)}> Save Changes </Button>
         : <div>
             <Button variant="contained" disabled> Save Changes </Button>
             <FormHelperText error>
